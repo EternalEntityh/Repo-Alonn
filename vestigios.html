@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VESTIGIOS — Registro personal</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   VESTIGIOS — tokens
+   ========================================================================== */
+:root{
+  color-scheme: dark;
+
+  /* color — plata, blanco, negro */
+  --bg:        #0a0a0b;
+  --bg-2:      #131316;
+  --glass:     rgba(19, 19, 22, 0.55);
+  --glass-hi:  rgba(255, 255, 255, 0.04);
+  --line:      rgba(255, 255, 255, 0.09);
+  --line-hi:   rgba(255, 255, 255, 0.38);
+  --silver:    #c9cdd3;
+  --silver-2:  #f1f2f4;
+  --silver-dim:#6e7378;
+  --text:      #f2f1ee;
+  --text-dim:  #9a9d9f;
+  --text-faint:#55585c;
+
+  /* type */
+  --f-display: 'Space Grotesk', sans-serif;
+  --f-body:    'Inter', sans-serif;
+  --f-mono:    'IBM Plex Mono', monospace;
+
+  /* space */
+  --gap-xs: 6px;
+  --gap-s:  12px;
+  --gap-m:  22px;
+  --gap-l:  40px;
+  --gap-xl: 72px;
+
+  /* carousel */
+  --card-w: 216px;
+  --card-ratio: 2 / 3;
+
+  /* motion */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --t-fast: 220ms;
+  --t-med:  520ms;
+  --t-slow: 900ms;
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--f-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+::selection{ background: var(--silver-dim); color: var(--text); }
+
+::-webkit-scrollbar{ height: 6px; width: 6px; }
+::-webkit-scrollbar-track{ background: transparent; }
+::-webkit-scrollbar-thumb{ background: var(--silver-dim); border-radius: 4px; }
+
+a{ color: inherit; }
+
+/* ==========================================================================
+   Backdrop dinámico — Olympus style, respira detrás de todo
+   ========================================================================== */
+.backdrop{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+.backdrop__layer{
+  position: absolute;
+  inset: -6%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(46px) saturate(.88) brightness(.5);
+  transform: scale(1.08);
+  opacity: 0;
+  transition: opacity var(--t-slow) var(--ease);
+  will-change: opacity;
+}
+.backdrop__layer.is-active{ opacity: 1; z-index: 1; }
+
+.backdrop__grain{
+  position: absolute;
+  inset: -50%;
+  z-index: 2;
+  opacity: .05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(8) infinite;
+}
+@keyframes grain{
+  0%,100%{ transform: translate(0,0); }
+  20%{ transform: translate(-3%,2%); }
+  40%{ transform: translate(2%,-4%); }
+  60%{ transform: translate(-2%,-2%); }
+  80%{ transform: translate(3%,3%); }
+}
+
+.backdrop__vignette{
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(0,0,0,0) 0%, rgba(10,10,11,.35) 55%, var(--bg) 100%),
+    linear-gradient(180deg, rgba(10,10,11,.7) 0%, rgba(10,10,11,.15) 22%, rgba(10,10,11,.15) 70%, var(--bg) 100%);
+}
+
+/* ==========================================================================
+   Topbar
+   ========================================================================== */
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-l);
+  padding: 18px clamp(20px, 4vw, 56px);
+  background: linear-gradient(180deg, rgba(10,10,11,.85) 0%, rgba(10,10,11,.55) 70%, transparent 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar__brand{
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.brand__mark{
+  position: relative;
+  display: inline-block;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 20px);
+  letter-spacing: .16em;
+  background: linear-gradient(120deg, var(--silver-2), var(--silver) 55%, var(--silver-dim));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.brand__mark::after{
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 42%, rgba(255,255,255,.85) 50%, transparent 58%);
+  background-size: 260% 100%;
+  background-position: -130% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: markSweep 9s ease-in-out infinite;
+  animation-delay: 2.4s;
+}
+@keyframes markSweep{
+  0%, 34%{ background-position: -130% 0; }
+  52%{ background-position: 130% 0; }
+  100%{ background-position: 130% 0; }
+}
+.brand__sub{
+  margin-top: 4px;
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  color: var(--text-faint);
+  text-transform: lowercase;
+}
+
+.topbar__nav{
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.topbar__nav::-webkit-scrollbar{ display: none; }
+
+.navpill{
+  font-family: var(--f-display);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 7px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.navpill:hover, .navpill:focus-visible{
+  color: var(--text);
+  border-color: var(--line-hi);
+  background: var(--glass-hi);
+}
+.navpill.is-current{
+  color: var(--bg);
+  background: var(--silver-2);
+  border-color: var(--silver-2);
+}
+
+.topbar__stats{
+  font-family: var(--f-mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+  letter-spacing: .03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.topbar__stats b{ color: var(--silver-2); font-weight: 700; }
+
+/* ==========================================================================
+   Main / rails
+   ========================================================================== */
+main{
+  position: relative;
+  z-index: 5;
+  padding: var(--gap-xl) 0 var(--gap-l);
+}
+
+.rail{
+  padding: 0 0 var(--gap-l);
+  scroll-margin-top: 92px;   /* que el título no quede bajo la barra fija */
+}
+
+.rail__head{
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 0 clamp(20px, 4vw, 56px);
+  margin-bottom: var(--gap-m);
+}
+.rail__title{
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: .02em;
+  margin: 0;
+}
+.rail__count{
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.rail__line{
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line-hi), transparent);
+}
+
+
+.rail__btns{
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-self: center;
+}
+.rail__btn{
+  width: 30px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-family: var(--f-display);
+  font-size: 17px;
+  line-height: 1;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.rail__btn:hover, .rail__btn:focus-visible{
+  color: var(--text);
+  border-color: var(--line-hi);
+  background: var(--glass-hi);
+}
+
+.rail__scroller{
+  position: relative;        /* offsetLeft de las tarjetas se mide contra el riel */
+  display: flex;
+  gap: var(--gap-m);
+  overflow-x: auto;
+  align-items: flex-start;   /* cada tarjeta mide lo suyo; no se estiran entre sí */
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: clamp(20px, 4vw, 56px);
+  padding: 26px clamp(20px, 4vw, 56px) 34px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--silver-dim) transparent;
+}
+
+/* ==========================================================================
+   Card — enfoque estilo Xbox 360 blade, spine de vinilo
+   ========================================================================== */
+.card{
+  --focus: 0;
+  --enter: 0;
+  position: relative;
+  flex: 0 0 var(--card-w);
+  width: var(--card-w);
+  min-width: 0;              /* sin esto, un título largo ensancha la tarjeta y estira todo el riel */
+  scroll-snap-align: center;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0 0 0 14px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  transform: translateY(calc((10px - (var(--focus) * 10px)) + ((1 - var(--enter)) * 26px))) scale(calc((0.88 + (var(--focus) * 0.16)) - ((1 - var(--enter)) * 0.06)));
+  opacity: calc((0.42 + (var(--focus) * 0.58)) * var(--enter));
+  filter: brightness(calc(0.65 + (var(--focus) * 0.35))) saturate(calc(0.7 + (var(--focus) * 0.3)));
+  transition: transform 340ms var(--ease), opacity 340ms var(--ease), filter var(--t-fast) var(--ease);
+  z-index: calc(var(--focus) * 10);
+}
+
+.card.is-far{ visibility: hidden; }
+
+.card__spine{
+  position: absolute;
+  left: 0;
+  top: 4%;
+  bottom: 4%;
+  width: 2px;
+  border-radius: 0;
+  background: var(--silver-dim);
+  opacity: calc(var(--focus) * 1);
+  transition: opacity var(--t-fast) var(--ease);
+}
+/* el brillo "respira" solo en la tarjeta enfocada: animar el box-shadow de cientos de spines tumbaba los fps */
+.card.is-focus .card__spine{ animation: spineBreathe 4.5s ease-in-out infinite; }
+@keyframes spineBreathe{
+  0%, 100%{ box-shadow: 0 0 12px 1px rgba(255,255,255, calc(var(--focus) * .5)); }
+  50%{      box-shadow: 0 0 20px 2px rgba(255,255,255, calc(var(--focus) * .75)); }
+}
+
+.card__media{
+  position: relative;
+  aspect-ratio: var(--card-ratio);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  box-shadow:
+    0 10px 30px -8px rgba(0,0,0,.6),
+    0 0 0 1px rgba(0,0,0,.2);
+  transform: perspective(700px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-med) var(--ease), transform 150ms ease-out;
+}
+.card:hover .card__media,
+.card:focus-visible .card__media{
+  border-color: var(--line-hi);
+  box-shadow:
+    0 20px 46px -10px rgba(0,0,0,.7),
+    0 0 0 1px rgba(255,255,255,.16),
+    0 0 30px -8px rgba(255,255,255,.22);
+}
+
+/* Filo — barrido de luz diagonal, único gesto de firma al enfocar la tarjeta */
+.card__media::before{
+  content: '';
+  position: absolute;
+  inset: -60% -70%;
+  width: 35%;
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,.32), transparent);
+  transform: rotate(10deg) translateX(-160%);
+  transition: transform .65s var(--ease);
+  pointer-events: none;
+  z-index: 3;
+}
+.card:hover .card__media::before,
+.card:focus-visible .card__media::before{
+  transform: rotate(10deg) translateX(340%);
+}
+
+.card__media img{
+  width: 112%;
+  height: 112%;
+  object-fit: cover;
+  position: relative;
+  left: -6%;
+  top: -6%;
+  transform: translate(var(--px, 0px), var(--py, 0px)) scale(1.02);
+  transition: transform 90ms linear, filter var(--t-fast) var(--ease);
+  filter: saturate(1.02) contrast(1.07);
+}
+
+.card__shade{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,10,11,0) 45%, rgba(10,10,11,.85) 100%);
+  pointer-events: none;
+}
+
+.card__badge{
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--silver-2);
+  border-radius: 2px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.card:hover .card__badge,
+.card:focus-visible .card__badge{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card__status{
+  position: absolute;
+  left: 9px;
+  bottom: 9px;
+  right: 9px;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.card__status b{ color: var(--silver-2); font-weight: 400; }
+.card:hover .card__status,
+.card:focus-visible .card__status{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card__title{
+  margin: 12px 0 2px;
+  font-family: var(--f-display);
+  font-weight: 500;
+  font-size: 13.5px;
+  letter-spacing: .01em;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card__fav{
+  margin-right: 6px;
+  font-size: 11px;
+  color: var(--silver-2);
+}
+.card__sub{
+  margin: 0;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+  letter-spacing: .03em;
+}
+
+.card:focus-visible{ outline: none; }
+.card:focus-visible .card__media{
+  outline: 2px solid var(--silver-2);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 860px){
+  :root{ --card-w: 148px; --gap-xl: 44px; --gap-l: 28px; }
+  .rail{ scroll-margin-top: 128px; }
+  .topbar{ gap: var(--gap-m); flex-wrap: wrap; }
+  .topbar__nav{ order: 3; flex: 1 0 100%; }   /* antes: flex:1 ignoraba el 100% y el nav quedaba aplastado en una sola fila */
+  .topbar__stats{ order: 2; margin-left: auto; }
+  .card__title{ font-size: 12px; }
+}
+
+@media (max-width: 520px){
+  .brand__sub{ display: none; }
+  .rail__title{ font-size: 18px; }
+  .rail__btns{ display: none; }   /* en táctil se desliza con el dedo */
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  .card__media img{ transform: none !important; }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- Fondo dinámico: dos capas para crossfade suave -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop__layer" id="backdropA"></div>
+    <div class="backdrop__layer" id="backdropB"></div>
+    <div class="backdrop__grain"></div>
+    <div class="backdrop__vignette"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="brand__mark" data-text="VESTIGIOS">VESTIGIOS</span>
+      <span class="brand__sub">registro personal</span>
+    </div>
+
+    <nav class="topbar__nav" id="quickNav" aria-label="Categorías"></nav>
+
+    <div class="topbar__stats" id="statsBar" aria-label="Estadísticas rápidas"></div>
+  </header>
+
+  <main id="rails"></main>
+
+  <script>
+/* ==========================================================================
+   VESTIGIOS — datos
+   Cada categoría tiene `items`. Los primeros son los de muestra originales
+   (con nota, año y portada de ejemplo); el resto salen de tus listas.
+
+   Para agregar un título nuevo basta una línea dentro de rows():
+     ["Título", capítulo, "done" | "drop" | "fav"]     (el 3.º es opcional)
+   Estado automático: done = Completado, drop = Abandonado,
+   capítulo ≤ 1 o vacío = Pendiente, el resto = En curso.
+
+   Portada: si el ítem no trae `img` se genera una portada tipográfica (sin
+   red). Para poner una real: { ...mk(...), img: "covers/mi-titulo.webp" }.
+   ========================================================================== */
+const poster = (seed) => `https://picsum.photos/seed/${seed}/420/630`;
+
+function mk(title, genre, cap, flag){
+  const it = { title, genre, cap: cap == null ? null : cap };
+  if (flag === "done")      it.status = "Completado";
+  else if (flag === "drop") it.status = "Abandonado";
+  else if (cap == null || cap <= 1) it.status = "Pendiente";
+  else                      it.status = "En curso";
+  if (flag === "fav") it.fav = true;
+  return it;
+}
+const rows = (genre, list) => list.map(([title, cap, flag]) => mk(title, genre, cap, flag));
+
+const DATA = {
+  anime: {
+    label: "Animes",
+    items: [
+      // — muestra original —
+      { title: "Vinland Saga",        sub: "戦士",     year: 2019, rating: "9.4", status: "Al día",     img: poster("vinland-saga") },
+      { title: "Jujutsu Kaisen",      sub: "呪術廻戦",  year: 2020, rating: "8.9", status: "Al día",     img: poster("jujutsu-kaisen") },
+      { title: "Frieren",             sub: "葬送",     year: 2023, rating: "9.6", status: "Completado", img: poster("frieren") },
+      { title: "Cowboy Bebop",        sub: "カウボーイ", year: 1998, rating: "9.7", status: "Completado", img: poster("cowboy-bebop") },
+      { title: "Mob Psycho 100",      sub: "モブ",     year: 2016, rating: "9.1", status: "Completado", img: poster("mob-psycho") },
+      { title: "Made in Abyss",       sub: "深淵",     year: 2017, rating: "9.0", status: "Pausado",    img: poster("made-in-abyss") },
+      { title: "Ping Pong",           sub: "卓球",     year: 2014, rating: "9.3", status: "Completado", img: poster("ping-pong") },
+      { title: "Attack on Titan",     sub: "進撃",     year: 2013, rating: "9.2", status: "Completado", img: poster("attack-on-titan") },
+      // — desde tus listas de Discord —
+      ...rows("Acción", [
+        ["Genjitsu Shugi Yuusha no Oukoku Saikenki", 26, "done"],
+        ["Mato Seihei no Slave", 12, "done"],
+        ["Takt Op. Destiny", 12, "done"],
+        ["Sekai Saikou no Ansatsusha, Isekai Kizoku ni Tensei suru", 12, "done"],
+        ["Seirei Gensouki", 12, "done"],
+        ["Ore dake Level Up na Ken", 12, "done"],
+        ["Ore dake Level Up na Ken Season 2: Arise from the Shadow", 13, "done"],
+        ["Kage no Jitsuryokusha ni Naritakute!", 20, "done"],
+        ["Kage no Jitsuryokusha ni Naritakute! 2nd Season", 30, "done"],
+        ["Kaijuu 8-gou", 12, "done"],
+        ["Arifureta Shokugyou de Sekai Saikyou", 13, "done"],
+        ["Arifureta Shokugyou de Sekai Saikyou 2nd Season", 15, "done"],
+        ["Arifureta Shokugyou de Sekai Saikyou Specials", 1, "done"],
+        ["Arifureta Shokugyou de Sekai Saikyou Season 3", 16, "done"],
+        ["Overlord", 13, "done"],
+        ["Overlord Specials", 9, "done"],
+        ["Overlord II", 13, "done"],
+        ["Overlord III", 13, "done"],
+        ["Overlord IV", 13, "done"],
+        ["Overlord Movie 3: Sei Oukoku-hen", 1, "done"],
+        ["Tate no Yuusha no Nariagari", 25, "done"],
+        ["Tate no Yuusha no Nariagari Season 2", 13, "done"],
+        ["Tate no Yuusha no Nariagari Season 3", 12, "done"],
+        ["Tate no Yuusha no Nariagari Season 4", 12, "done"],
+        ["Black Bullet", 0],
+        ["Gachiakuta", 1],
+        ["One Punch Man 3", 0],
+        ["Dead Mount Death Play", 0],
+        ["Ansatsusha de Aru Ore no Status ga Yuusha yori mo Akiraka ni Tsuyoi no da ga", 0],
+      ]),
+      ...rows("Comedia", [
+        ["Kyokou Suiri", 1],
+        ["Megami no café", 24, "done"],
+        ["Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san", 12, "done"],
+        ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e", 12, "done"],
+        ["Kuroiwa Medaka ni Watashi no Kawaii ga Tsuujinai", 2],
+        ["Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen", 12, "done"],
+        ["Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen 2nd Season", 13, "done"],
+        ["Kaguya-sama wa Kokurasetai: Ultra Romantic", 13, "done"],
+        ["Kaguya-sama wa Kokurasetai: First Kiss wa Owaranai", 4, "done"],
+        ["Masamune-kun no Revenge", 13, "done"],
+        ["Masamune-kun no Revenge R", 12, "done"],
+        ["Class no Daikirai na Joshi to Kekkon suru Koto ni Natta.", 5],
+        ["Isekai wa Smartphone to Tomo ni.", 12, "done"],
+        ["Isekai wa Smartphone to Tomo ni. 2", 12, "done"],
+        ["Isekai Maou to Shoukan Shoujo no Dorei Majutsu", 12, "done"],
+        ["Isekai Maou to Shoukan Shoujo no Dorei Majutsu Ω", 10, "done"],
+      ]),
+      ...rows("Drama", [
+        ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 2nd Season", 13, "done"],
+        ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 3rd Season", 13, "done"],
+        ["Kaoru Hana wa Rin to Saku", 1],
+        ["Oshi no ko", null],
+      ]),
+      ...rows("Fantasía", [
+        ["Tensei Shitara Slime Datta Ken", 25, "done"],
+        ["Tensei shitara Slime Datta Ken OVA", 5, "done"],
+        ["Tensei shitara Slime Datta Ken: Coleus no Yume", 3, "done"],
+        ["Tensei shitara Slime Datta Ken 2nd Season", 12, "done"],
+        ["Tensei shitara Slime Datta Ken 2nd Season Part 2", 12, "done"],
+        ["Tensura Nikki: Tensei shitara Slime Datta Ken", 12, "done"],
+        ["Tensei Shitara Slime Datta Ken Movie: Guren no Kizuna-hen", 1, "done"],
+        ["Tensei shitara Slime Datta Ken 3rd Season", 24, "done"],
+        ["Maou Gakuin no Futekigousha", 13, "done"],
+        ["Maou Gakuin no Futekigousha II", 1],
+        ["Isekai Mokushiroku Mynoghra: Hametsu no Bunmei de Hajimeru Sekai Seifuku", 13, "done"],
+      ]),
+      ...rows("Misterio", [
+        ["Hyouka", 12],
+      ]),
+    ],
+  },
+  manga: {
+    label: "Mangas",
+    items: [
+      // — muestra original —
+      { title: "Vagabond",            sub: "武蔵",     year: 1998, rating: "9.8", status: "Pausado",    img: poster("vagabond") },
+      { title: "Berserk",              sub: "剣の戦士",  year: 1989, rating: "9.9", status: "Al día",     img: poster("berserk") },
+      { title: "Blame!",               sub: "ブラム",   year: 1997, rating: "8.6", status: "Completado", img: poster("blame") },
+      { title: "Oyasumi Punpun",       sub: "ぷんぷん",  year: 2007, rating: "9.3", status: "Completado", img: poster("punpun") },
+      { title: "20th Century Boys",    sub: "少年",     year: 1999, rating: "9.1", status: "Completado", img: poster("20th-century-boys") },
+      { title: "Homunculus",           sub: "ホムンクルス", year: 2003, rating: "8.4", status: "Completado", img: poster("homunculus") },
+      { title: "Dorohedoro",           sub: "どろへどろ", year: 2000, rating: "8.8", status: "Completado", img: poster("dorohedoro") },
+      { title: "Gantz",                sub: "ガンツ",   year: 2000, rating: "8.2", status: "Abandonado", img: poster("gantz") },
+      // — desde tus listas de Discord —
+      ...rows("Acción", [
+        ["Bleach", 1],
+        ["One piece", 1],
+        ["Black Clover", 1],
+        ["Sakamoto Days", 225],
+        ["Shuumatsu no Valkyrie", 1],
+        ["One Punch-Man", 270],
+        ["Harten", 1],
+      ]),
+      ...rows("Aventura", [
+        ["Kage no Jitsuryokusha ni Naritakute", 76.1],
+      ]),
+      ...rows("Drama", [
+        ["Estoy preocupado por mi compañera de clase que está cubierta de moretones", 42, "done"],
+        ["Shonen no Abyss", 33],
+        ["Kagurabachi", 1],
+        ["Juujika no Rokunin", 193],
+        ["Jujutsu Kaisen", 1],
+        ["Kaiju No. 8", 120],
+        ["Blue lock", 150],
+        ["Blue Lock - Episodio de Nagi", 1],
+        ["Fairy Tail", 1],
+        ["Monster", 1],
+        ["Vinland Saga", 1],
+        ["Gokurakugai", 1],
+        ["Gachiakuta", 1],
+        ["Kimi ga Bokura wo Akuma to Yonda Koro", 1],
+        ["Hakanai Kimi wa Moukou wo Hajimeru", 1],
+        ["The climber", 1],
+        ["Innocent", 1],
+      ]),
+      ...rows("Harem", [
+        ["Dosanko Gyaru is mega Cute", 1],
+      ]),
+      ...rows("Fantasía", [
+        ["Tougen Anki", 1],
+      ]),
+      ...rows("Romance", [
+        ["Jigokuraku", 127, "done"],
+        ["Overly Straightforward Classmate", 4, "drop"],
+        ["Chainsaw man", 187],
+        ["Boku to Gal ga Fuufu Ni Naru made", 16],
+        ["Dandadan", 1],
+        ["Hyouka", 1],
+        ["Mato Seihei No Slave", 1],
+        ["Kaoru Hana Wa Rin To Saku", 156],
+        ["Kimi Janakya Dame na dreishojo", 1],
+        ["Haimiya Senpai Is Scary and Cute", 1],
+        ["Otoyomegatari", 1],
+        ["Akanabe-sensei no sabe lo que es la vergüenza", 1],
+        ["Mimi, una chica completamente normal", 1],
+        ["Tonari no Seki no Yatsu ga Eroi me de Mitekuru Hanashi", 1],
+        ["A Story About Smoking at the Back of the Supermarket", 1],
+        ["Por el bien de mi futura venganza", 1],
+        ["Masamune-kun Revenge", 1],
+        ["The Ice Guy and His Cool Female Colleague", 1],
+        ["My Love Story with Yamada-Kun at Lv999", 1],
+      ]),
+      ...rows("Artes marciales", [
+        ["Enen no Shouboutai", 1],
+        ["Usogui", 1],
+      ]),
+      ...rows("Thriller", [
+        ["Oni Goroshi", 1],
+        ["Tokyo Ghoul", 1],
+        ["Tokyo Ghoul:re", 1],
+        ["Jagaaan", 1],
+        ["Bibliomania", 1],
+        ["Fire Punch", 1],
+      ]),
+    ],
+  },
+  manhwa: {
+    label: "Manhwas",
+    items: [
+      // — muestra original —
+      { title: "Solo Leveling",              sub: "나 혼자만", year: 2018, rating: "9.0", status: "Completado", img: poster("solo-leveling") },
+      { title: "Omniscient Reader",          sub: "전지적",   year: 2020, rating: "9.5", status: "Al día",     img: poster("omniscient-reader") },
+      { title: "The Beginning After the End", sub: "TBATE",  year: 2018, rating: "9.1", status: "Al día",     img: poster("tbate") },
+      { title: "Tower of God",               sub: "신의 탑",   year: 2010, rating: "8.7", status: "Al día",     img: poster("tower-of-god") },
+      { title: "Bastard",                    sub: "바스타드", year: 2014, rating: "8.9", status: "Completado", img: poster("bastard") },
+      { title: "Sweet Home",                 sub: "스위트홈", year: 2017, rating: "8.5", status: "Completado", img: poster("sweet-home") },
+      { title: "Wind Breaker",               sub: "윈드브레이커", year: 2020, rating: "8.6", status: "Al día", img: poster("wind-breaker") },
+      { title: "Viral Hit",                  sub: "인생역전", year: 2019, rating: "8.3", status: "Al día",     img: poster("viral-hit") },
+      // — desde tus listas de Discord —
+      ...rows("Acción", [
+        ["Villano a matar", 200],
+        ["Tu talento es mío", 100],
+        ["Asesina de Héroes", 226],
+        ["Novato Solo a Nivel Máximo", 213],
+        ["El Asesino Que Retornó Como El Hijo Del Duque", 94],
+        ["El genio asesino lo tomará todo", 70],
+        ["Mercenario Adolescente", 254],
+        ["El retorno del jugador", 200],
+        ["El hijo menor del maestro de la espada", 161],
+        ["Retorno del héroe clase desastre", 129],
+        ["El Maestro de la Espada Genio de la Academia", 104],
+        ["El Blinker Genio de la Academia Mágica", 100],
+        ["Obtuve un Objeto Mítico", 132],
+        ["Worn and Torn Newbie", 220],
+        ["Solo Leveling: Ragnarok", 47.5],
+        ["Choi Siwoo el goblin nocturno", 100],
+        ["Juvenile law", 51],
+        ["El mundo después del fin", 192],
+        ["Electricidad veloz", 354],
+        ["Castle", 210],
+        ["El extra de la novela (remake)", 131],
+        ["Limit breaker", 50],
+        ["La Espada del Chamán", 1],
+        ["Mosquito Wars", 1],
+        ["ZomGan", 1],
+        ["Regreso de la Secta del Monte Hua", 1],
+        ["Sentido de la diversión", 46.5],
+        ["Viviendo como un bárbaro en un mundo de fantasía", 65],
+        ["El Genio Espadachín fantasma de la secta del monte Hua", 33],
+        ["Mision Barbara", 9],
+        ["Gosu", 1],
+        ["El amo de la plaga", 63],
+        ["El villano de mirada cortante de la Academia Demoniaca", 49],
+        ["La regresión 100 del jugador de nivel máximo", 70],
+        ["Voy a Aniquilar Esta Tierra", 54],
+        ["Solía ser un jefe", 124],
+        ["Doom Breaker", 1],
+        ["Sobreviviendo al Juego Siendo un Bárbaro (Bjorn el bárbaro)", 124],
+        ["Evolución Demoníaca", 125],
+        ["Me convertí en el genio bastardo de un noble clan oscuro", 43],
+        ["La regresión del demonio benevolente", 59],
+        ["El regreso del Caballero de la muerte Clase Apocalipsis", 42],
+        ["La Ascensión Marcial del Dios Demonio", 142],
+        ["Iniciando sesión en 10,000 años en el futuro", 216],
+        ["El Rey Demonio Abrumado por Héroes", 1],
+        ["Rey usurero de Murim", 1],
+        ["El Mago Pastor", 1],
+        ["Regresión Absoluta", 1],
+        ["El Retorno Del Patriarca Mil Años Después", 1],
+        ["Reencarnación del Rey del Puño", 1],
+        ["El Herrero Genio del Juego", 1],
+        ["El Stream Reencarnado", 1],
+        ["Cómo vivir como un villano", 1],
+        ["El Dios Caótico de Fuerza Extraordinaria", 1],
+        ["El Mago Devorador De Talentos", 1],
+        ["Night of shadows", 1],
+        ["El Genio Marcial que lo Recuerda Todo", 1],
+        ["El Devoto Caballero", 1],
+        ["El Perro Loco de la Mansión del Duque", 1],
+        ["Nano Machine", 1],
+        ["El Joven Heredero de la Familia de Nigromantes", 1],
+        ["Trinity Wonder", 1],
+        ["La aniquilación del Sendero Celestial", 1],
+        ["Como criar villanos correctamente", 8, "fav"],
+        ["El guerrero despiadado", 32],
+        ["Mi Vida Cuidando Dragonas", 14, "fav"],
+        ["Me convertí en el villano con el que la heroína está obsesionada", 56, "fav"],
+        ["Tomb raider king", 411, "done"],
+        ["Hectopascal", 97, "done"],
+        ["The boxer", 110, "done"],
+      ]),
+      ...rows("Drama", [
+        ["El Secreto de Jae-kyung", 141, "done"],
+        ["The Horizon", 1],
+        ["Hero Has Returned", 124],
+        ["Unordinary", 1],
+        ["Fight Class 3", 108],
+        ["Reality Quest", 181],
+        ["Day Walker", 1],
+        ["El amor puro de la villana", 9],
+        ["La vida después de la muerte", 202],
+        ["Pedro el Asesino", 94],
+        ["Manager Kim", 72],
+        ["Amigo De La Infancia Zenith", 1],
+        ["Me hice cargo de la Academia con un solo cuchillo de sashimi", 49],
+        ["Campo de batalla superhumano", 140],
+        ["Me Hago mas Fuerte Comiendo", 100, "done"],
+        ["The Dark Magician Transmigrates After 66666 Years", 150],
+        ["El asesino que reencarnó como un genio espadachín", 56],
+        ["Leviatán", 1],
+        ["Estándar de la Reencarnación", 1],
+        ["El Caballero de Fuego Ardiente", 1],
+        ["Tacit", 1],
+        ["El bastardo devorador de armas", 25],
+        ["Dominio Absoluto", 32],
+        ["Haciendo Justicia", 28],
+        ["Existencia", 1],
+        ["El hijo menor de un conglomerado", 170],
+        ["La voluntad de supervivencia del villano", 43],
+        ["Chronicles of the Lazy Sovereign", 15],
+        ["Cuando poseí a alguien, terminé convirtiéndome en una historia de terror", 29],
+        ["El Ascenso del Tercer Príncipe del Reino Caído", 36],
+        ["Esclavo Corporativo en una Historia de Fantasmas", 1, "fav"],
+        ["Un Nigromante en la familia de espadachines", 1],
+        ["El Regreso Del Mago Ilegítimo", 1],
+        ["Me convertí en un hombre casado en otro mundo.", 1],
+        ["El Curriculum Del Archimago", 1],
+        ["Manual de instrucciones del Reencarnado", 1],
+        ["Civilización Nebula", 1],
+        ["Burning Effect", 1],
+        ["El matón a cargo", 1],
+        ["La Escuela Del Mal", 1],
+        ["Me convertí en el amo del rey demonio más débil", 1],
+        ["El Conquistador De La Escuela", 1],
+        ["Manual de Reeducación de Damas Nobles", 1],
+        ["Sistema de Cultivo del Demonio Celestial", 1],
+        ["Mi esposa sigue esperando en los campos de trigo", 1],
+        ["Plaything", 1],
+        ["El Psicópata del Murim", 1],
+        ["Cheolsu, salva el mundo", 1],
+        ["Surviving the Apocalypse", 1],
+        ["Viviendo como un Lord Vampiro", 1],
+        ["El renacimiento del Demonio Divino", 1],
+        ["Camino A Ver A Mi Madre", 32, "done"],
+      ]),
+      ...rows("Harem", [
+        ["Jugador que regresó 10.000 años después", 134],
+        ["¡El Héroe De Nivel Máximo Ha Regresado!", 221],
+        ["El Dios de la Batalla de la Academia de Cazadores", 1],
+        ["FFF-Class Trashero", 1],
+        ["Destinado a ser Amado por Villanas", 46],
+        ["La Magia de un Retornado Debe Ser Especial", 1],
+        ["Me ofrecieron su lealtad después de que tuviera mucho dinero", 22],
+        ["Vida estable sin desenfreno", 1],
+        ["Las Heroínas intentan matarme", 1, "fav"],
+      ]),
+      ...rows("Romance", [
+        ["Probably...? Invincible", 1],
+        ["Lookism", 1],
+        ["Quest Supremacy", 1],
+        ["¡Me vi inmerso en un manga desconocido!", 1],
+        ["La Hermana Malvada Esconde Su Riqueza", 1],
+        ["El demonio criará a una dama", 1],
+        ["La Villana a que Escapó de su Destino", 1],
+        ["La Regresión del Eunuco para Recuperar su Hombría", 1],
+        ["Mage Again", 1],
+      ]),
+      ...rows("Fantasía", [
+        ["El dios marcial regreso al nivel 2", 95],
+        ["Regreso del Ranker de clase SSS", 165],
+        ["Pick me up", 146],
+        ["Segunda Vida para Ser un Ranker", 200],
+        ["Ultra alter", 65],
+        ["Maldita reencarnación", 81.5],
+        ["El Prodigioso caballero oscuro con tiempo limitado", 96],
+        ["El regreso del genio de las artes marciales", 1],
+        ["El mejor Ingeniero del mundo", 182],
+        ["El Retorno Del Ranker", 1],
+        ["Mago Infinito", 108],
+        ["Guía de supervivencia del extra de la academia", 82.05],
+        ["Actúe como un jefecito final, Sr. devorador", 99],
+        ["The Return of the 8th Class Magician", 1],
+        ["Reincarnation of the Suicidal Battle God", 1],
+        ["Mi Hermano Pequeño Es El Mejor De La Academia", 1],
+        ["El mago prodigio devorador de medicina", 1],
+        ["El restaurante del mago", 109],
+        ["Mago devorador de dragones", 27],
+        ["Renuncié a ser el rey demonio", 57],
+        ["Helmut: El Niño Abandonado", 75],
+        ["Subiendo de nivel con las mejores habilidades", 98],
+        ["Mi hija es el jefe final", 1],
+        ["Cómo vivir como el príncipe enemigo", 31],
+        ["El Hijo Menor del Renombrado Clan Mágico", 1],
+        ["Leyendo Libros me Convertí en el Legendario Archimago", 11],
+        ["La Tanque Clase-C retornada no morirá", 21],
+        ["Me convertí en tirano de un juego de defensa", 10],
+        ["¡Mi Hija es un Dragón!", 11],
+        ["El Troll más fuerte del mundo", 146],
+        ["La evolución del monstruo espacial", 73],
+        ["Nivelando Con Los Dioses", 147],
+        ["Hasta el rey demonio, un paso a la vez", 1],
+        ["Tu trono", 1],
+        ["Overpowered Sword", 1],
+        ["Super Evolution", 141, "drop"],
+      ]),
+      ...rows("Aventura", [
+        ["El Regreso del Jugador Congelado", 165],
+        ["El rey caballero que regresó como un dios", 95],
+        ["No soy esa clase de talento", 32],
+        ["Nigromante sin límites", 120],
+        ["Revenge of the Iron-Blooded Sword Hound", 97],
+        ["El héroe de nivel legendario prodigio de la academia", 36],
+        ["Una carta de amor del futuro", 1],
+        ["Tengo La Guía Exclusiva De La Torre", 1],
+        ["Las conspiraciones del mercenario regresado", 60],
+        ["Maestro De La Espada Perezoso", 1],
+        ["El nigromante inigualable", 85],
+        ["El Dios de la Espada en un Mundo Caído", 36],
+        ["Jugador de nivel máximo", 118],
+        ["El Regreso del Espadachín Oscuro", 1, "fav"],
+        ["Return Survival", 168, "done"],
+      ]),
+      ...rows("Artes marciales", [
+        ["Verdugo", 50],
+        ["Desprendiendo El Asco", 77],
+        ["El demonio celestial no puede llevar una vida normal", 157],
+        ["Crónicas de la Facción Demoníaca", 120],
+        ["Legend Of The Northern Blade", 202, "done"],
+        ["El Descenso del Maestro Demoníaco", 1],
+        ["Solo Spell Caster", 1],
+        ["Camino de la reencarnación del rey del inframundo", 9],
+        ["Prisión Juvenil", 1],
+        ["La regresión Inigualable del Caza Dragones", 41],
+        ["El héroe expulsado es demasiado fuerte.", 70],
+        ["El Indomable Rey Marcial", 101],
+        ["Actuando como el villano de ojos de zorro Perfecto", 38],
+      ]),
+      ...rows("Thriller", [
+        ["El chico de la escopeta", 68, "done"],
+        ["Pocilga", 1],
+        ["Hand Jumper", 1],
+      ]),
+    ],
+  },
+  manhua: {
+    label: "Manhuas",
+    items: [
+      // — desde tus listas de Discord —
+      ...rows("Acción", [
+        ["Emperador Mágico", 1],
+        ["El amo de la plaga", 63],
+        ["Dao del Inmortal Bizarro", 1],
+        ["¡Mataré a todas las razas!", 1],
+        ["The Mask of Truth", 1],
+        ["¡Mientras mis discípulos se matan entrenando, yo me relajo!", 168],
+        ["Periodo Glaciar: Construí un Refugio Apocalíptico", 633],
+        ["Renacimiento en el apocalipsis: Alcanzando la cima abriendo cajas", 50],
+        ["El Heroe, El Rey Demonio y El Villano", 127],
+      ]),
+      ...rows("Harem", [
+        ["¡Me cansé de ser un lame-culos y Ahora Tengo 90 mil millones de monedas de oro!", 529, "done"],
+        ["Me canse de ser pobre y ahora soy multimillonario", 222],
+        ["¿Qué, hay de malo en que gane algo de dinero como uber?", 142],
+        ["Tengo una carrera al azar cada semana", 793],
+        ["The Villain Of Destiny", 264],
+        ["El Dios de la Batalla de la Academia de Cazadores", 1],
+        ["Top Luck, Quietly Practice For Thousands Of Years", 1],
+        ["Mr. Zombie", 124],
+        ["Cambié mi vida al registrarme", 1],
+        ["Batalla a través de los cielos", 1],
+        ["TRANSMISIÓN EN VIVO DE DIEZ MIL MUNDOS (el gran tirano local de transmisión en vivo)", 1],
+      ]),
+      ...rows("Romance", [
+        ["SOY SOLO UN INMORTAL", 1],
+        ["¡¿Mi discípula se convirtió en la gran emperatriz demonio?!", 40],
+        ["Rebirth of the Divine Defeater", 94],
+        ["Martial Peak", 15],
+        ["Mi Esposa Es La Lider Del Culto Demoniaco", 1],
+      ]),
+      ...rows("Artes marciales", [
+        ["World's Apocalypse Online", 1],
+        ["ASESINO DE LA LUNA ROJA", 1],
+        ["Cuando Enfrento a los Fuertes, me vuelvo aún más fuerte", 73],
+      ]),
+    ],
+  },
+  novela: {
+    label: "Novelas",
+    items: [
+      // — muestra original —
+      { title: "Mushoku Tensei",       sub: "無職転生",  year: 2014, rating: "9.2", status: "Completado", img: poster("mushoku-tensei") },
+      { title: "Overlord",             sub: "オーバーロード", year: 2012, rating: "8.8", status: "Al día", img: poster("overlord") },
+      { title: "Re:Zero",              sub: "リゼロ",   year: 2012, rating: "9.0", status: "Al día",     img: poster("rezero") },
+      { title: "The Wandering Inn",    sub: "web novel", year: 2016, rating: "9.4", status: "Al día",     img: poster("wandering-inn") },
+      { title: "Konosuba",             sub: "この素晴らしい", year: 2012, rating: "8.7", status: "Completado", img: poster("konosuba") },
+      { title: "Tensura",              sub: "転スラ",   year: 2013, rating: "8.5", status: "Completado", img: poster("tensura") },
+      { title: "Classroom of the Elite", sub: "ようこそ実力", year: 2015, rating: "8.9", status: "Al día", img: poster("classroom-elite") },
+      { title: "Grimgar",              sub: "灰と幻想",  year: 2013, rating: "8.1", status: "Completado", img: poster("grimgar") },
+      // — desde tus listas de Discord —
+      ...rows("Acción", [
+        ["Reverend Insanity", 200],
+        ["El villano de mirada cortante de la Academia Demoniaca", 84.2],
+        ["Me Convertí en el Patrón de los Villanos", 492],
+      ]),
+      ...rows("Fantasía", [
+        ["Lord of The Mysteries", 0],
+        ["Shadow Slave", 0],
+        ["Me Casé con el Dragón que Maté.", 0],
+      ]),
+    ],
+  },
+  josei: {
+    label: "Josei",
+    items: [
+      // — desde tus listas de Discord —
+      ...rows("Drama", [
+        ["Como conquistar a mi marido", 1],
+        ["Villanos destinados a morir", 1],
+        ["La Dama Secreta", 1],
+        ["La Villana es una Marioneta", 1],
+      ]),
+      ...rows("Romance", [
+        ["Sangre vengadora", 1],
+      ]),
+    ],
+  },
+  shoujo: {
+    label: "Shoujo",
+    items: [
+      // — desde tus listas de Discord —
+      ...rows("Drama", [
+        ["Pure Love Villain", 1],
+        ["La Chica Del Go", 1],
+        ["La Madrastra Dé Márchen", 1],
+        ["Robe El Alma Del Ranker Numero Uno", 1],
+        ["Everyone Loves Her", 1],
+      ]),
+    ],
+  },
+};
+
+/* ==========================================================================
+   Utilidades
+   ========================================================================== */
+const railsEl   = document.getElementById("rails");
+const navEl     = document.getElementById("quickNav");
+const statsEl   = document.getElementById("statsBar");
+const backdropA = document.getElementById("backdropA");
+const backdropB = document.getElementById("backdropB");
+
+const STATUS_ICON = {
+  "Completado": "✓",
+  "Al día":     "▸",
+  "En curso":   "▸",
+  "Pausado":    "‖",
+  "Abandonado": "✕",
+  "Pendiente":  "○",
+};
+
+const xmlEsc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+function hashStr(s){
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+
+function wrapTitle(text, perLine, maxLines){
+  const words = [];
+  text.split(/\s+/).forEach(w => {
+    while (w.length > perLine){ words.push(w.slice(0, perLine)); w = w.slice(perLine); }
+    if (w) words.push(w);
+  });
+  const lines = [];
+  let cur = "";
+  for (const w of words){
+    const next = cur ? cur + " " + w : w;
+    if (next.length <= perLine) cur = next;
+    else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  if (lines.length > maxLines){
+    lines.length = maxLines;
+    lines[maxLines - 1] = lines[maxLines - 1].replace(/.{0,2}$/, "") + "…";
+  }
+  return lines;
+}
+
+/* Portada tipográfica: monocroma (plata sobre negro), distinta por título.
+   Se usa cuando no hay `img` o cuando la imagen falla al cargar. */
+const coverCache = new Map();
+function coverFor(item){
+  const key = item.title + "|" + (item.genre || "");
+  if (coverCache.has(key)) return coverCache.get(key);
+
+  const h    = hashStr(item.title);
+  const l1   = 15 + (h % 9);
+  const l2   = 5 + ((h >> 5) % 5);
+  const ang  = 105 + ((h >> 9) % 60);
+  const len  = item.title.length;
+  const fs   = len > 48 ? 27 : len > 30 ? 31 : 37;
+  const per  = Math.floor(304 / (fs * 0.56));
+  const lines = wrapTitle(item.title, per, 7);
+  const lh   = fs * 1.18;
+  const y0   = 150 + fs * 0.9;
+  const letter = (item.title.match(/[\p{L}\p{N}]/u) || ["·"])[0].toUpperCase();
+  const label  = xmlEsc((item.genre || "").toLowerCase());
+
+  const tspans = lines.map((ln, i) =>
+    `<text x='58' y='${(y0 + i * lh).toFixed(1)}' font-size='${fs}' font-weight='600' fill='#f1f2f4'>${xmlEsc(ln)}</text>`
+  ).join("");
+
+  const svg =
+    `<svg xmlns='http://www.w3.org/2000/svg' width='420' height='630' viewBox='0 0 420 630' font-family='Helvetica Neue, Arial, sans-serif'>` +
+    `<defs><linearGradient id='g' gradientTransform='rotate(${ang} .5 .5)'>` +
+    `<stop offset='0' stop-color='hsl(220,5%,${l1}%)'/><stop offset='1' stop-color='hsl(220,6%,${l2}%)'/></linearGradient></defs>` +
+    `<rect width='420' height='630' fill='url(#g)'/>` +
+    `<text x='404' y='640' font-size='400' font-weight='700' text-anchor='end' fill='rgba(255,255,255,.055)'>${xmlEsc(letter)}</text>` +
+    (label ? `<text x='58' y='92' font-size='14' letter-spacing='2.5' fill='rgba(201,205,211,.72)'>${label}</text>` : "") +
+    tspans +
+    `</svg>`;
+
+  const uri = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  coverCache.set(key, uri);
+  return uri;
+}
+
+const normTitle = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+
+/* Aviso en consola si un título se repite dentro de una categoría */
+function warnDuplicates(){
+  Object.values(DATA).forEach(cat => {
+    const seen = new Set();
+    cat.items.forEach(i => {
+      const n = normTitle(i.title);
+      if (seen.has(n)) console.warn(`[VESTIGIOS] Título repetido en ${cat.label}: ${i.title}`);
+      seen.add(n);
+    });
+  });
+}
+
+/* ==========================================================================
+   Render
+   ========================================================================== */
+function buildCard(item){
+  const src = item.img || coverFor(item);
+  const rated = item.rating != null && !isNaN(parseFloat(item.rating));
+
+  const card = document.createElement("article");
+  card.className = "card";
+  card.tabIndex = -1;                // un solo tab-stop por riel (ver setupRail)
+  card.dataset.img = src;
+  card.setAttribute("aria-label",
+    [item.title, rated ? `nota ${item.rating}` : null, item.status, item.fav ? "favorito" : null]
+      .filter(Boolean).join(", "));
+
+  card.innerHTML = `
+    <div class="card__spine"></div>
+    <div class="card__media">
+      <img alt="" decoding="async">
+      <div class="card__shade"></div>
+      <span class="card__badge"></span>
+      <div class="card__status"></div>
+    </div>
+    <h3 class="card__title"></h3>
+    <p class="card__sub"></p>
+  `;
+
+  const img = card.querySelector("img");
+  img.alt = item.title;
+  img.loading = "lazy";
+  // si la portada remota falla, cae a la tipográfica (también para el fondo)
+  img.addEventListener("error", () => {
+    const fb = coverFor(item);
+    card.dataset.img = fb;
+    img.src = fb;
+  }, { once: true });
+  img.src = src;
+
+  const badge = card.querySelector(".card__badge");
+  if (rated) badge.textContent = item.rating; else badge.remove();
+
+  const status = card.querySelector(".card__status");
+  if (item.status){
+    const b = document.createElement("b");
+    b.textContent = STATUS_ICON[item.status] || "•";
+    status.append(b, ` ${item.status}${item.cap > 1 ? ` · cap ${item.cap}` : ""}`);
+  }
+
+  const title = card.querySelector(".card__title");
+  title.title = item.title;
+  if (item.fav){
+    const star = document.createElement("span");
+    star.className = "card__fav";
+    star.textContent = "★";
+    title.append(star);
+  }
+  title.append(item.title);
+
+  card.querySelector(".card__sub").textContent =
+    [item.sub || item.genre, item.year].filter(Boolean).join(" · ");
+
+  return card;
+}
+
+function buildRail(key, cat){
+  const section = document.createElement("section");
+  section.className = "rail";
+  section.id = `rail-${key}`;
+
+  const head = document.createElement("div");
+  head.className = "rail__head";
+  head.innerHTML = `
+    <h2 class="rail__title"></h2>
+    <span class="rail__count"></span>
+    <span class="rail__line"></span>
+    <div class="rail__btns">
+      <button class="rail__btn" type="button" data-dir="-1" aria-label="Anteriores">‹</button>
+      <button class="rail__btn" type="button" data-dir="1" aria-label="Siguientes">›</button>
+    </div>
+  `;
+  head.querySelector(".rail__title").textContent = cat.label;
+  head.querySelector(".rail__count").textContent = `${cat.items.length} títulos`;
+
+  const scroller = document.createElement("div");
+  scroller.className = "rail__scroller";
+  const frag = document.createDocumentFragment();
+  cat.items.forEach(item => frag.appendChild(buildCard(item)));
+  scroller.appendChild(frag);
+
+  head.querySelectorAll(".rail__btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      scroller.dispatchEvent(new Event("vestigios:manual"));   // pausa la deriva antes de mover
+      scroller.scrollBy({ left: Number(btn.dataset.dir) * scroller.clientWidth * 0.8, behavior: "smooth" });
+    });
+  });
+
+  section.appendChild(head);
+  section.appendChild(scroller);
+  railsEl.appendChild(section);
+
+  return { key, section, scroller, focusedImg: null };
+}
+
+function buildNav(){
+  Object.entries(DATA).forEach(([key, cat], i) => {
+    const pill = document.createElement("button");
+    pill.className = "navpill" + (i === 0 ? " is-current" : "");
+    pill.textContent = cat.label;
+    pill.dataset.target = `rail-${key}`;
+    pill.addEventListener("click", () => {
+      document.getElementById(`rail-${key}`).scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    navEl.appendChild(pill);
+  });
+}
+
+function buildStats(){
+  const all = Object.values(DATA).flatMap(c => c.items);
+  const rated = all.map(i => parseFloat(i.rating)).filter(n => !isNaN(n));
+  const avg = rated.length ? (rated.reduce((a, b) => a + b, 0) / rated.length).toFixed(1) : "—";
+  statsEl.innerHTML = `<b>${all.length}</b> títulos · promedio <b>${avg}</b>`;
+}
+
+/* ==========================================================================
+   Fondo dinámico — crossfade entre dos capas.
+   Solo el riel "activo" (el que está al centro de la pantalla o bajo el
+   cursor) gobierna el fondo; así los rieles que derivan solos no pelean.
+   ========================================================================== */
+let activeLayer = "A";
+let currentBackdrop = null;
+let activeRail = null;
+
+function setBackdrop(url){
+  if (!url || url === currentBackdrop) return;
+  currentBackdrop = url;
+  const incoming = activeLayer === "A" ? backdropB : backdropA;
+  const outgoing = activeLayer === "A" ? backdropA : backdropB;
+
+  incoming.style.backgroundImage = `url("${url}")`;
+  requestAnimationFrame(() => {
+    incoming.classList.add("is-active");
+    outgoing.classList.remove("is-active");
+  });
+  activeLayer = activeLayer === "A" ? "B" : "A";
+}
+
+function setActiveRail(rail){
+  if (!rail || activeRail === rail) return;
+  activeRail = rail;
+  if (rail.focusedImg) setBackdrop(rail.focusedImg);
+}
+
+/* ==========================================================================
+   Parallax + tilt sutil en hover
+   ========================================================================== */
+function attachParallax(card){
+  const media = card.querySelector(".card__media");
+  const img = card.querySelector("img");
+
+  card.addEventListener("mousemove", (e) => {
+    const r = media.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    img.style.setProperty("--px", `${(-px * 12).toFixed(1)}px`);
+    img.style.setProperty("--py", `${(-py * 12).toFixed(1)}px`);
+    media.style.setProperty("--rx", `${(px * 8).toFixed(2)}deg`);
+    media.style.setProperty("--ry", `${(-py * 8).toFixed(2)}deg`);
+  });
+
+  card.addEventListener("mouseleave", () => {
+    img.style.setProperty("--px", `0px`);
+    img.style.setProperty("--py", `0px`);
+    media.style.setProperty("--rx", `0deg`);
+    media.style.setProperty("--ry", `0deg`);
+  });
+}
+
+/* ==========================================================================
+   Riel: foco tipo Xbox 360 (el centrado crece, los lejanos se apagan),
+   teclado, deriva automática y entrada escalonada.
+   ========================================================================== */
+function setupRail(rail, index){
+  const { scroller, section } = rail;
+  const cards = [...scroller.querySelectorAll(".card")];
+  if (!cards.length) return;
+
+  /* --- foco: sin leer el layout en cada frame ---------------------------
+     Las posiciones se miden una vez (y al redimensionar). Después el foco
+     sale de scrollLeft, y solo se escribe en las tarjetas que cambian. */
+  let metrics = [];
+  function measure(){
+    const pad = parseFloat(getComputedStyle(cards[0]).paddingLeft) || 0;
+    metrics = cards.map(c => ({ c, mid: c.offsetLeft + pad + (c.offsetWidth - pad) / 2, f: -1, far: null }));
+  }
+
+  function update(){
+    const half = scroller.clientWidth / 2;
+    if (!half) return;
+    const center = scroller.scrollLeft + half;
+    let best = null, bestVal = -1;
+
+    for (const m of metrics){
+      const dist = Math.abs(center - m.mid);
+      const far = dist > half * 2.4;                // fuera de pantalla: no se pinta (rieles de 200+ tarjetas)
+      if (far !== m.far){ m.c.classList.toggle("is-far", far); m.far = far; }
+      const norm = Math.max(0, 1 - dist / half);
+      if (norm !== m.f){
+        m.c.style.setProperty("--focus", norm.toFixed(3));
+        m.f = norm;
+      }
+      if (norm > bestVal){ bestVal = norm; best = m.c; }
+    }
+
+    if (best && bestVal > 0.72){
+      if (rail.focusCard !== best){
+        if (rail.focusCard) rail.focusCard.classList.remove("is-focus");
+        best.classList.add("is-focus");
+        rail.focusCard = best;
+      }
+      rail.focusedImg = best.dataset.img;
+      if (rail === activeRail) setBackdrop(rail.focusedImg);
+    }
+  }
+
+  let ticking = false;
+  scroller.addEventListener("scroll", () => {
+    if (!ticking){
+      ticking = true;
+      requestAnimationFrame(() => { update(); ticking = false; });
+    }
+  }, { passive: true });
+
+  function remeasure(){ measure(); update(); }
+  window.addEventListener("resize", remeasure);
+  window.addEventListener("load", remeasure);
+  remeasure();
+
+  /* --- teclado: un solo tab-stop por riel, flechas para moverse --------- */
+  let roving = cards[0];
+  roving.tabIndex = 0;
+  scroller.addEventListener("focusin", (e) => {
+    const c = e.target.closest(".card");
+    if (!c || c === roving) return;
+    roving.tabIndex = -1;
+    c.tabIndex = 0;
+    roving = c;
+  });
+  scroller.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const c = e.target.closest(".card");
+    if (!c) return;
+    const next = cards[cards.indexOf(c) + (e.key === "ArrowRight" ? 1 : -1)];
+    if (!next) return;
+    e.preventDefault();
+    next.focus({ preventScroll: true });
+    next.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  });
+
+  scroller.addEventListener("pointerenter", () => setActiveRail(rail));
+
+  /* --- entrada escalonada: la primera vez que el riel aparece ----------- */
+  const reveal = new IntersectionObserver((entries) => {
+    if (!entries.some(e => e.isIntersecting)) return;
+    cards.forEach((card, i) => {
+      const delay = Math.min(i, 14) * 45;         // tope: en rieles largos no se espera
+      card.style.transitionDelay = `${delay}ms`;
+      requestAnimationFrame(() => card.style.setProperty("--enter", 1));
+      setTimeout(() => { card.style.transitionDelay = ""; }, 600 + delay);
+    });
+    reveal.disconnect();
+  }, { threshold: 0.1 });
+  reveal.observe(section);
+
+  /* --- deriva automática -------------------------------------------------
+     Lenta y continua. Se pausa con hover, toque, foco, pestaña oculta, riel
+     fuera de pantalla, o si alguien mueve el riel a mano (botones, barra,
+     teclado). El snap solo se activa mientras se interactúa con toque/teclado. */
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const state = { hover: false, touch: false, focus: false, hidden: document.hidden, visible: true, until: 0 };
+  const isPaused = (t) => state.hover || state.touch || state.focus || state.hidden || !state.visible || t < state.until;
+  const snap = (on) => { scroller.style.scrollSnapType = on ? "x mandatory" : "none"; };
+
+  scroller.addEventListener("vestigios:manual", () => { state.until = performance.now() + 3000; });
+  scroller.addEventListener("pointerenter", () => { state.hover = true; });
+  scroller.addEventListener("pointerleave", () => { state.hover = false; });
+  scroller.addEventListener("touchstart", () => { state.touch = true; snap(true); }, { passive: true });
+  scroller.addEventListener("touchend", () => setTimeout(() => {
+    state.touch = false;
+    if (!state.focus) snap(false);
+  }, 1500), { passive: true });
+  scroller.addEventListener("focusin", () => { state.focus = true; snap(true); });
+  scroller.addEventListener("focusout", (e) => {
+    if (scroller.contains(e.relatedTarget)) return;     // el foco sigue dentro del riel
+    state.focus = false;
+    if (!state.touch) snap(false);
+  });
+  document.addEventListener("visibilitychange", () => { state.hidden = document.hidden; });
+
+  new IntersectionObserver(
+    ([entry]) => { state.visible = entry.isIntersecting; },
+    { threshold: 0.2 }
+  ).observe(section);
+
+  snap(false);
+
+  const SPEED = 26;                    // px/s
+  let last = null;
+  let resetting = false;
+  let pos = scroller.scrollLeft;       // posición propia en coma flotante (scrollLeft se redondea al leerlo)
+
+  function frame(t){
+    requestAnimationFrame(frame);
+    if (resetting || isPaused(t)){ last = null; return; }
+    if (last === null){ last = t; pos = scroller.scrollLeft; return; }
+
+    const dt = Math.min((t - last) / 1000, 0.1);
+    last = t;
+
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    if (maxScroll <= 0) return;
+
+    // alguien movió el riel por su cuenta: no pelear con él
+    if (Math.abs(scroller.scrollLeft - pos) > 3){ state.until = t + 2500; last = null; return; }
+
+    if (pos >= maxScroll - 1){
+      // fin del riel: espera un momento y vuelve al inicio de golpe
+      // (un scroll suave a lo largo de cientos de tarjetas era eterno y chocaba con la deriva)
+      resetting = true;
+      setTimeout(() => { scroller.scrollLeft = 0; pos = 0; last = null; resetting = false; }, 1600);
+      return;
+    }
+    pos += SPEED * dt;
+    scroller.scrollLeft = pos;
+  }
+
+  // cada riel arranca en un instante distinto para que no se muevan al unísono
+  setTimeout(() => requestAnimationFrame(frame), index * 900);
+}
+
+/* ==========================================================================
+   Pestaña activa del nav + riel activo mientras se hace scroll vertical
+   ========================================================================== */
+function attachSectionObserver(railsById){
+  const pills = [...document.querySelectorAll(".navpill")];
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      let current = null;
+      pills.forEach(p => {
+        const on = p.dataset.target === entry.target.id;
+        p.classList.toggle("is-current", on);
+        if (on) current = p;
+      });
+      // en pantallas chicas el nav se desplaza: mantener la pestaña activa a la vista
+      if (current){
+        const nr = navEl.getBoundingClientRect(), pr = current.getBoundingClientRect();
+        navEl.scrollTo({ left: navEl.scrollLeft + (pr.left - nr.left) - nr.width / 2 + pr.width / 2, behavior: "smooth" });
+      }
+      setActiveRail(railsById.get(entry.target.id));
+    });
+  }, { rootMargin: "-40% 0px -50% 0px", threshold: 0 });
+
+  railsById.forEach(r => io.observe(r.section));
+}
+
+/* ==========================================================================
+   Init
+   ========================================================================== */
+function init(){
+  warnDuplicates();
+  buildNav();
+  buildStats();
+
+  const rails = [];
+  const railsById = new Map();
+  Object.entries(DATA).forEach(([key, cat], i) => {
+    const rail = buildRail(key, cat);
+    rails.push(rail);
+    railsById.set(`rail-${key}`, rail);
+    rail.scroller.querySelectorAll(".card").forEach(attachParallax);
+    setupRail(rail, i);
+  });
+
+  attachSectionObserver(railsById);
+
+  // fondo inicial: el riel de arriba gobierna
+  setActiveRail(rails[0]);
+  if (!currentBackdrop){
+    const first = rails[0].scroller.querySelector(".card");
+    if (first) setBackdrop(first.dataset.img);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", init);
+
+</script>
+</body>
+</html>
