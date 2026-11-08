@@ -55,7 +55,10 @@
 }
 
 *{ box-sizing: border-box; }
+[hidden]{ display: none !important; }
 html{ scroll-behavior: smooth; }
+
+body.is-modal{ overflow: hidden; }
 
 body{
   margin: 0;
@@ -282,7 +285,7 @@ a{ color: inherit; }
 main{
   position: relative;
   z-index: 5;
-  padding: var(--gap-xl) 0 var(--gap-l);
+  padding: var(--gap-l) 0 var(--gap-l);
 }
 
 .rail{
@@ -536,6 +539,241 @@ main{
 }
 
 /* ==========================================================================
+   Barra de búsqueda / filtros
+   ========================================================================== */
+.toolbar{
+  position: relative;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px clamp(20px, 4vw, 56px) 0;
+}
+.toolbar__row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+.toolbar__spacer{ flex: 1; }
+.syncnote{
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: .03em;
+  color: var(--text-faint);
+}
+
+.field-input{
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 8px 12px;
+  transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.field-input::placeholder{ color: var(--text-faint); }
+.field-input:hover{ border-color: var(--line-hi); }
+.field-input:focus-visible{ outline: none; border-color: var(--silver-2); }
+.search{ flex: 1 1 240px; max-width: 360px; }
+select.field-input{ cursor: pointer; padding-right: 8px; }
+
+.linkbtn{
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--line-hi);
+  text-underline-offset: 4px;
+}
+.linkbtn:hover, .linkbtn:focus-visible{ color: var(--text); outline: none; }
+
+.chips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip{
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.chip small{
+  margin-left: 8px;
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  color: var(--text-faint);
+}
+.chip:hover, .chip:focus-visible{ color: var(--text); border-color: var(--line-hi); outline: none; }
+.chip[aria-pressed="true"]{
+  color: var(--text);
+  border-color: var(--line-hi);
+  background: var(--glass-hi);
+  box-shadow: inset 0 -2px 0 var(--silver-2);
+}
+
+.empty{
+  position: relative;
+  z-index: 6;
+  padding: var(--gap-xl) clamp(20px, 4vw, 56px);
+  color: var(--text-dim);
+  font-size: 14px;
+}
+.empty .linkbtn{ margin-left: 8px; }
+
+/* barra de avance (cap / total) dentro de la portada */
+.card__bar{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background: rgba(255,255,255,.14);
+}
+.card__bar i{
+  display: block;
+  height: 100%;
+  width: calc(var(--p, 0) * 100%);
+  background: var(--silver-2);
+}
+
+/* ==========================================================================
+   Ficha de edición
+   ========================================================================== */
+.editor{
+  padding: 0;
+  color: var(--text);
+  background: rgba(14, 14, 16, .94);
+  border: 1px solid var(--line-hi);
+  border-radius: 4px;
+  width: min(740px, calc(100vw - 28px));
+  max-height: calc(100dvh - 28px);
+  box-shadow: 0 30px 80px -20px rgba(0,0,0,.85);
+}
+.editor::backdrop{
+  background: rgba(4, 4, 5, .68);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.editor__inner{
+  position: relative;
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 28px;
+  padding: 28px;
+  max-height: calc(100dvh - 30px);
+  overflow-y: auto;
+}
+.editor__close{
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 30px; height: 30px;
+  font-size: 14px;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+}
+.editor__close:hover, .editor__close:focus-visible{ color: var(--text); border-color: var(--line-hi); outline: none; }
+.editor__cover img{
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.editor__file{
+  margin: 10px 0 0;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--text-faint);
+  word-break: break-all;
+}
+.editor__body{ display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.editor__meta{ margin: 0; font-family: var(--f-mono); font-size: 11px; color: var(--text-faint); letter-spacing: .03em; }
+.editor__title{
+  margin: 0 36px 2px 0;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(20px, 3vw, 26px);
+  line-height: 1.2;
+}
+.editor__row{ display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+.field{ display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field > span{ font-size: 12px; color: var(--text-dim); }
+.field--grow{ flex: 1 1 140px; }
+.field .field-input{ width: 100%; }
+.editor textarea.field-input{ resize: vertical; min-height: 74px; font-family: var(--f-body); }
+.editor input[type="number"]{ font-family: var(--f-mono); }
+
+.stepper{ display: flex; gap: 6px; }
+.stepper .field-input{ width: 86px; text-align: center; }
+.stepper button, .favbtn{
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0 12px;
+  cursor: pointer;
+}
+.stepper button{ min-width: 38px; height: 36px; }
+.favbtn{ height: 36px; }
+.stepper button:hover, .stepper button:focus-visible, .favbtn:hover, .favbtn:focus-visible{ color: var(--text); border-color: var(--line-hi); outline: none; }
+.favbtn[aria-pressed="true"]{ color: var(--bg); background: var(--silver-2); border-color: var(--silver-2); }
+
+.editor__foot{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 60;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--text);
+  background: rgba(22, 22, 25, .96);
+  border: 1px solid var(--line-hi);
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 10px);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.toast.is-on{ opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 620px){
+  .editor__inner{ grid-template-columns: 1fr; gap: 18px; padding: 20px; }
+  .editor__cover{ display: flex; gap: 14px; align-items: flex-end; }
+  .editor__cover img{ width: 96px; }
+}
+
+/* ==========================================================================
    Login — pantalla completa con la foto sin recorte ni filtros
    ========================================================================== */
 .lg{
@@ -680,6 +918,9 @@ main{
 @media (max-width: 860px){
   :root{ --card-w: 148px; --gap-xl: 44px; --gap-l: 28px; }
   .rail{ scroll-margin-top: 128px; }
+  .chips{ flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .chips::-webkit-scrollbar{ display: none; }
+  .search{ max-width: none; }
   .topbar{ gap: var(--gap-m); flex-wrap: wrap; }
   .topbar__nav{ order: 3; flex: 1 0 100%; }   /* antes: flex:1 ignoraba el 100% y el nav quedaba aplastado en una sola fila */
   .topbar__stats{ order: 2; margin-left: auto; }
@@ -694,6 +935,7 @@ main{
 
 @media (max-width: 520px){
   .brand__sub{ display: none; }
+  .hide-sm{ display: none; }
   .rail__title{ font-size: 18px; }
   .rail__btns{ display: none; }   /* en táctil se desliza con el dedo */
   .authbox__name{ display: none; }
@@ -729,7 +971,57 @@ main{
     <div class="authbox" id="authBox"></div>
   </header>
 
+  <section class="toolbar" aria-label="Buscar y filtrar">
+    <div class="toolbar__row">
+      <input class="field-input search" id="q" type="search" placeholder="Buscar título…   ( / )" autocomplete="off" aria-label="Buscar título">
+      <select class="field-input" id="fGenre" aria-label="Género"></select>
+      <select class="field-input" id="fSort" aria-label="Ordenar por"></select>
+      <span class="toolbar__spacer"></span>
+      <span class="syncnote" id="syncNote" role="status" aria-live="polite">Progreso guardado solo en este navegador · entra para guardarlo en tu cuenta</span>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Filtrar por estado"></div>
+  </section>
+
   <main id="rails"></main>
+
+  <div class="empty" id="empty" hidden>Nada coincide con esos filtros.<button class="linkbtn" type="button" id="btnClear">Limpiar filtros</button></div>
+
+  <dialog class="editor" id="editor" aria-labelledby="edTitle">
+    <div class="editor__inner">
+      <button class="editor__close" id="edClose" type="button" aria-label="Cerrar">✕</button>
+      <div class="editor__cover">
+        <div>
+          <img id="edImg" alt="">
+          <p class="editor__file" id="edFile"></p>
+        </div>
+      </div>
+      <div class="editor__body">
+        <div>
+          <p class="editor__meta" id="edMeta"></p>
+          <h2 class="editor__title" id="edTitle"></h2>
+        </div>
+        <div class="editor__row">
+          <label class="field field--grow"><span>Estado</span><select class="field-input" id="edStatus"></select></label>
+          <button class="favbtn" id="edFav" type="button" aria-pressed="false">★ Favorito</button>
+        </div>
+        <div class="editor__row">
+          <div class="field"><span>Capítulo</span>
+            <div class="stepper">
+              <button type="button" id="edCapMinus" aria-label="Restar un capítulo">−</button>
+              <input class="field-input" id="edCap" type="number" min="0" step="any" inputmode="decimal" aria-label="Capítulo actual">
+              <button type="button" id="edCapPlus" aria-label="Sumar un capítulo">+1</button>
+            </div>
+          </div>
+          <label class="field"><span>Total (opcional)</span><input class="field-input" id="edTotal" type="number" min="0" step="any" inputmode="decimal" placeholder="—" style="width:96px"></label>
+          <label class="field"><span>Nota (0–10)</span><input class="field-input" id="edRating" type="number" min="0" max="10" step="0.1" inputmode="decimal" placeholder="—" style="width:86px"></label>
+        </div>
+        <label class="field"><span>Notas</span><textarea class="field-input" id="edNotes" rows="3" maxlength="500" placeholder="Opinión, dónde la leo, por qué la dejé…"></textarea></label>
+        <p class="editor__foot"><span id="edUpdated"></span><button class="linkbtn" type="button" id="edReset">Volver a los datos originales</button></p>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Login: se abre con "Entrar" (o solo, si REQUIRE_LOGIN = true más abajo) -->
   <div class="lg" id="login" hidden role="dialog" aria-modal="true" aria-labelledby="lgTitle">
@@ -780,13 +1072,18 @@ main{
    Cada categoría tiene `items`. Los primeros son los de muestra originales
    (con nota, año y portada de ejemplo); el resto salen de tus listas.
 
-   Para agregar un título nuevo basta una línea dentro de rows():
+   Agregar un título: una línea dentro de rows():
      ["Título", capítulo, "done" | "drop" | "fav"]     (el 3.º es opcional)
-   Estado automático: done = Completado, drop = Abandonado,
+   Estado inicial: done = Completado, drop = Abandonado,
    capítulo ≤ 1 o vacío = Pendiente, el resto = En curso.
 
-   Portada: si el ítem no trae `img` se genera una portada tipográfica (sin
-   red). Para poner una real: { ...mk(...), img: "covers/mi-titulo.webp" }.
+   PORTADAS (GitHub): sube la imagen a la carpeta covers/ con el nombre
+     <categoria>-<titulo-en-minusculas-con-guiones>.webp   (también .jpg o .png)
+   p. ej. covers/manhwa-tower-of-god.webp. Si no hay archivo, se muestra una
+   portada tipográfica. Para forzar otra ruta: { ...mk(...), img: "covers/otra.webp" }.
+
+   PROGRESO: lo que cambies en la ficha (clic en una tarjeta) se guarda en este
+   navegador y, si has iniciado sesión, también en tu cuenta (Firestore).
    ========================================================================== */
 const poster = (seed) => `https://picsum.photos/seed/${seed}/420/630`;
 
@@ -1018,7 +1315,6 @@ const DATA = {
         ["El Genio Espadachín fantasma de la secta del monte Hua", 33],
         ["Mision Barbara", 9],
         ["Gosu", 1],
-        ["El amo de la plaga", 63],
         ["El villano de mirada cortante de la Academia Demoniaca", 49],
         ["La regresión 100 del jugador de nivel máximo", 70],
         ["Voy a Aniquilar Esta Tierra", 54],
@@ -1232,7 +1528,6 @@ const DATA = {
         ["¿Qué, hay de malo en que gane algo de dinero como uber?", 142],
         ["Tengo una carrera al azar cada semana", 793],
         ["The Villain Of Destiny", 264],
-        ["El Dios de la Batalla de la Academia de Cazadores", 1],
         ["Top Luck, Quietly Practice For Thousands Of Years", 1],
         ["Mr. Zombie", 124],
         ["Cambié mi vida al registrarme", 1],
@@ -1409,67 +1704,200 @@ function warnDuplicates(){
 }
 
 /* ==========================================================================
-   Render
+   Ids, portadas (carpeta covers/) y progreso guardado
    ========================================================================== */
-function buildCard(item){
-  const src = item.img || coverFor(item);
-  const rated = item.rating != null && !isNaN(parseFloat(item.rating));
+const COVER_DIR = "covers/";
+const COVER_EXT = ["webp", "jpg", "png"];
+const STATUSES  = ["Pendiente", "En curso", "Al día", "Pausado", "Completado", "Abandonado"];
+const STORE_KEY = "vestigios:progreso:v1";
 
+const $    = (s, r = document) => r.querySelector(s);
+const fold = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+/* Nombre de archivo de una portada: <categoria>-<slug>.webp */
+const slugify = (s) =>
+  (s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/ω/g, "omega").replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+    .slice(0, 60).replace(/-+$/g, "")) || "titulo";
+
+const ALL = [];                                   // todos los ítems, planos
+Object.entries(DATA).forEach(([key, cat]) => {
+  const used = new Set();
+  cat.items.forEach(it => {
+    const base = slugify(it.title);
+    let s = base, n = 2;
+    while (used.has(s)) s = `${base}-${n++}`;
+    used.add(s);
+    it.cat = key;
+    it.slug = s;
+    it.id = `${key}:${s}`;                        // clave estable del progreso guardado
+    it._fold = fold([it.title, it.genre, it.sub].filter(Boolean).join(" "));
+    ALL.push(it);
+  });
+});
+
+const isPlaceholder = (u) => /picsum\.photos/.test(u || "");
+/* Orden de búsqueda de portada: img explícita → covers/ (webp, jpg, png) → placeholder.
+   Si nada existe se queda la portada tipográfica. */
+function coverChain(item){
+  const local = COVER_EXT.map(e => `${COVER_DIR}${item.cat}-${item.slug}.${e}`);
+  const chain = [];
+  if (item.img && !isPlaceholder(item.img)) chain.push(item.img);
+  chain.push(...local);
+  if (item.img && isPlaceholder(item.img)) chain.push(item.img);
+  return chain;
+}
+
+/* ==========================================================================
+   Progreso guardado (localStorage). Los datos de arriba son la base; lo que
+   cambies en la ficha (estado, capítulo, nota, favorito…) se guarda aparte y
+   los pisa. Se puede exportar/importar para llevarlo a otro navegador.
+   ========================================================================== */
+let STATE = {};
+let storageOk = true;
+let saveTimer = 0;
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    STATE = raw ? JSON.parse(raw) : {};
+    if (!STATE || typeof STATE !== "object" || Array.isArray(STATE)) STATE = {};
+  } catch (e){ STATE = {}; storageOk = false; }
+}
+function flushState(){
+  clearTimeout(saveTimer);
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(STATE)); }
+  catch (e){
+    if (storageOk){ storageOk = false; toast("Este navegador no deja guardar el progreso. Inicia sesión para guardarlo en tu cuenta."); }
+  }
+}
+function saveState(){
+  clearTimeout(saveTimer); saveTimer = setTimeout(flushState, 250);
+  window.dispatchEvent(new Event("vestigios:changed"));      // la nube se entera (ver módulo de login)
+}
+window.addEventListener("pagehide", flushState);
+document.addEventListener("visibilitychange", () => { if (document.hidden) flushState(); });
+
+const view     = (item) => { const s = STATE[item.id]; return s && !s.del ? Object.assign({}, item, s) : item; };   // del = lápida de reset
+const hasOwn   = (id) => !!(STATE[id] && !STATE[id].del);
+const ratingOf = (v) => { const r = v.rating == null || v.rating === "" ? NaN : parseFloat(v.rating); return isNaN(r) ? null : r; };
+const capOf    = (v) => (v.cap == null ? 0 : Number(v.cap) || 0);
+const totalOf  = (v) => (Number(v.total) > 0 ? Number(v.total) : 0);
+const fmt      = (r) => String(Math.round(r * 10) / 10);
+
+function patch(item, changes){
+  const cur = STATE[item.id];
+  STATE[item.id] = Object.assign(cur && !cur.del ? cur : {}, changes, { updated: Date.now() });
+  saveState();
+  onItemChanged(item);
+}
+
+let toastTimer = 0;
+function toast(msg){
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("is-on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("is-on"), 3200);
+}
+
+/* ==========================================================================
+   Tarjetas
+   ========================================================================== */
+const CARD_BY_ID = new Map();
+const railsList = [];
+
+function buildCard(item){
   const card = document.createElement("article");
   card.className = "card";
   card.tabIndex = -1;                // un solo tab-stop por riel (ver setupRail)
-  card.dataset.img = src;
-  card.setAttribute("aria-label",
-    [item.title, rated ? `nota ${item.rating}` : null, item.status, item.fav ? "favorito" : null]
-      .filter(Boolean).join(", "));
+  card._item = item;
 
   card.innerHTML = `
     <div class="card__spine"></div>
     <div class="card__media">
-      <img alt="" decoding="async">
+      <img alt="" decoding="async" draggable="false">
       <div class="card__shade"></div>
-      <span class="card__badge"></span>
+      <span class="card__badge" hidden></span>
       <div class="card__status"></div>
+      <div class="card__bar" hidden><i></i></div>
     </div>
     <h3 class="card__title"></h3>
     <p class="card__sub"></p>
   `;
+  card.querySelector("img").alt = item.title;
+  card.querySelector(".card__sub").textContent =
+    [item.sub || item.genre, item.year].filter(Boolean).join(" · ");
 
-  const img = card.querySelector("img");
-  img.alt = item.title;
-  img.loading = "lazy";
-  // si la portada remota falla, cae a la tipográfica (también para el fondo)
-  img.addEventListener("error", () => {
-    const fb = coverFor(item);
-    card.dataset.img = fb;
-    img.src = fb;
-  }, { once: true });
-  img.src = src;
+  CARD_BY_ID.set(item.id, card);
+  renderCard(card);
+  return card;
+}
+
+/* Parte de la tarjeta que depende del progreso (se repinta al editar) */
+function renderCard(card){
+  const item = card._item, v = view(item);
+  const r = ratingOf(v), cap = capOf(v), total = totalOf(v);
+  const status = v.status || "Pendiente";
+
+  card.setAttribute("aria-label", [
+    item.title, status, cap > 1 ? `capítulo ${cap}` : null,
+    r != null ? `nota ${fmt(r)}` : null, v.fav ? "favorito" : null,
+  ].filter(Boolean).join(", "));
 
   const badge = card.querySelector(".card__badge");
-  if (rated) badge.textContent = item.rating; else badge.remove();
+  badge.hidden = r == null;
+  if (r != null) badge.textContent = fmt(r);
 
-  const status = card.querySelector(".card__status");
-  if (item.status){
-    const b = document.createElement("b");
-    b.textContent = STATUS_ICON[item.status] || "•";
-    status.append(b, ` ${item.status}${item.cap > 1 ? ` · cap ${item.cap}` : ""}`);
-  }
+  const st = card.querySelector(".card__status");
+  st.textContent = "";
+  const b = document.createElement("b");
+  b.textContent = STATUS_ICON[status] || "•";
+  st.append(b, ` ${status}${cap > 1 ? ` · cap ${cap}${total ? "/" + total : ""}` : ""}`);
+
+  const p = total && cap ? Math.min(1, cap / total) : 0;
+  const bar = card.querySelector(".card__bar");
+  bar.hidden = !p;
+  bar.style.setProperty("--p", p.toFixed(3));
 
   const title = card.querySelector(".card__title");
+  title.textContent = "";
   title.title = item.title;
-  if (item.fav){
+  if (v.fav){
     const star = document.createElement("span");
     star.className = "card__fav";
     star.textContent = "★";
     title.append(star);
   }
   title.append(item.title);
+}
 
-  card.querySelector(".card__sub").textContent =
-    [item.sub || item.genre, item.year].filter(Boolean).join(" · ");
+/* Portada real: se busca solo cuando la tarjeta está cerca de la pantalla.
+   Mientras tanto (o si no existe archivo) se muestra la tipográfica. */
+const cardImg = (card) => card.dataset.img || (card.dataset.img = coverFor(card._item));
 
-  return card;
+function probeCover(card){
+  if (card._probed) return;
+  card._probed = true;
+  const item = card._item;
+  const img = card.querySelector("img");
+  img.src = cardImg(card);
+
+  const chain = coverChain(item);
+  let i = 0;
+  (function next(){
+    if (i >= chain.length) return;
+    const url = chain[i++];
+    const probe = new Image();
+    probe.onload = () => {
+      img.src = url;
+      card.dataset.img = url;
+      if (card.classList.contains("is-focus") && card._rail === activeRail) setBackdrop(url);
+    };
+    probe.onerror = next;
+    probe.src = url;
+  })();
 }
 
 function buildRail(key, cat){
@@ -1489,12 +1917,18 @@ function buildRail(key, cat){
     </div>
   `;
   head.querySelector(".rail__title").textContent = cat.label;
-  head.querySelector(".rail__count").textContent = `${cat.items.length} títulos`;
+  const countEl = head.querySelector(".rail__count");
+  countEl.textContent = `${cat.items.length} títulos`;
 
   const scroller = document.createElement("div");
   scroller.className = "rail__scroller";
   const frag = document.createDocumentFragment();
-  cat.items.forEach(item => frag.appendChild(buildCard(item)));
+  const cards = cat.items.map((item, i) => {
+    const c = buildCard(item);
+    c._order = i;
+    frag.appendChild(c);
+    return c;
+  });
   scroller.appendChild(frag);
 
   head.querySelectorAll(".rail__btn").forEach(btn => {
@@ -1508,7 +1942,10 @@ function buildRail(key, cat){
   section.appendChild(scroller);
   railsEl.appendChild(section);
 
-  return { key, section, scroller, focusedImg: null };
+  const rail = { key, section, scroller, cards, countEl, total: cards.length,
+                 focusedImg: null, focusCard: null, near: false, refresh: () => {} };
+  cards.forEach(c => { c._rail = rail; });
+  return rail;
 }
 
 function buildNav(){
@@ -1524,11 +1961,324 @@ function buildNav(){
   });
 }
 
-function buildStats(){
-  const all = Object.values(DATA).flatMap(c => c.items);
-  const rated = all.map(i => parseFloat(i.rating)).filter(n => !isNaN(n));
-  const avg = rated.length ? (rated.reduce((a, b) => a + b, 0) / rated.length).toFixed(1) : "—";
-  statsEl.innerHTML = `<b>${all.length}</b> títulos · promedio <b>${avg}</b>`;
+/* ==========================================================================
+   Contadores
+   ========================================================================== */
+function updateStats(){
+  const counts = {};
+  let favs = 0;
+  ALL.forEach(item => {
+    const v = view(item);
+    const s = v.status || "Pendiente";
+    counts[s] = (counts[s] || 0) + 1;
+    if (v.fav) favs++;
+  });
+  statsEl.innerHTML = `<b>${ALL.length}</b> títulos<span class="hide-sm"> · <b>${counts["En curso"] || 0}</b> en curso</span> · <b>${favs}</b> ★`;
+
+  document.querySelectorAll("#chips .chip").forEach(ch => {
+    const k = ch.dataset.kind;
+    const n = k === "all" ? ALL.length : k === "fav" ? favs : (counts[ch.dataset.value] || 0);
+    ch.querySelector("small").textContent = n;
+  });
+}
+
+/* ==========================================================================
+   Búsqueda, filtros y orden
+   ========================================================================== */
+const F = { q: "", status: "", fav: false, genre: "", sort: "orig" };
+
+const SORTS = {
+  orig:    "Orden de mi lista",
+  az:      "A–Z",
+  rating:  "Mejor nota",
+  cap:     "Más avanzado",
+  updated: "Último cambio",
+};
+
+function sortCmp(){
+  const v = (c) => view(c._item);
+  switch (F.sort){
+    case "az":      return (a, b) => a._item.title.localeCompare(b._item.title, "es", { sensitivity: "base", ignorePunctuation: true });
+    case "rating":  return (a, b) => (ratingOf(v(b)) ?? -1) - (ratingOf(v(a)) ?? -1);
+    case "cap":     return (a, b) => capOf(v(b)) - capOf(v(a));
+    case "updated": return (a, b) => (v(b).updated || 0) - (v(a).updated || 0);
+    default:        return null;
+  }
+}
+
+function applyFilters(keepScroll){
+  const tokens = fold(F.q).split(/\s+/).filter(Boolean);
+  const cmp = sortCmp();
+  let shown = 0;
+
+  railsList.forEach(rail => {
+    let n = 0;
+    rail.cards.forEach(card => {
+      const item = card._item, v = view(item);
+      let ok = true;
+      if (F.status && (v.status || "Pendiente") !== F.status) ok = false;
+      if (ok && F.fav && !v.fav) ok = false;
+      if (ok && F.genre && item.genre !== F.genre) ok = false;
+      if (ok && tokens.length){
+        const hay = v.notes ? item._fold + " " + fold(v.notes) : item._fold;
+        ok = tokens.every(t => hay.includes(t));
+      }
+      card.hidden = !ok;
+      if (ok) n++;
+    });
+
+    const list = cmp ? rail.cards.slice().sort((a, b) => cmp(a, b) || a._item.id.localeCompare(b._item.id)) : rail.cards;
+    list.forEach((c, i) => { c._order = i; c.style.order = i; });
+
+    rail.section.hidden = n === 0;
+    rail.countEl.textContent = n === rail.total ? `${n} títulos` : `${n} de ${rail.total} títulos`;
+    document.querySelector(`.navpill[data-target="${rail.section.id}"]`).hidden = n === 0;
+    shown += n;
+
+    if (!keepScroll) rail.scroller.scrollLeft = 0;
+    rail.refresh();
+  });
+
+  $("#empty").hidden = shown > 0;
+}
+
+function syncChips(){
+  document.querySelectorAll("#chips .chip").forEach(ch => {
+    const k = ch.dataset.kind;
+    const on = k === "all" ? (!F.status && !F.fav) : k === "fav" ? F.fav : F.status === ch.dataset.value;
+    ch.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function resetFilters(){
+  F.q = ""; F.status = ""; F.fav = false; F.genre = ""; F.sort = "orig";
+  $("#q").value = ""; $("#fGenre").value = ""; $("#fSort").value = "orig";
+  syncChips();
+  applyFilters();
+}
+
+function buildToolbar(){
+  const chips = $("#chips");
+  const addChip = (label, kind, value) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.dataset.kind = kind;
+    if (value) b.dataset.value = value;
+    b.setAttribute("aria-pressed", "false");
+    b.innerHTML = "<span></span><small></small>";
+    b.firstChild.textContent = label;
+    chips.appendChild(b);
+  };
+  addChip("Todos", "all");
+  addChip("★ Favoritos", "fav");
+  STATUSES.forEach(s => addChip(s, "status", s));
+
+  chips.addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    const k = b.dataset.kind;
+    if (k === "all"){ F.status = ""; F.fav = false; }
+    else if (k === "fav") F.fav = !F.fav;
+    else F.status = F.status === b.dataset.value ? "" : b.dataset.value;
+    syncChips();
+    applyFilters();
+  });
+
+  const genres = [...new Set(ALL.map(i => i.genre).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  const gSel = $("#fGenre");
+  gSel.innerHTML = '<option value="">Todos los géneros</option>' + genres.map(g => `<option>${g}</option>`).join("");
+  gSel.addEventListener("change", () => { F.genre = gSel.value; applyFilters(); });
+
+  const sSel = $("#fSort");
+  sSel.innerHTML = Object.entries(SORTS).map(([k, l]) => `<option value="${k}">${l}</option>`).join("");
+  sSel.addEventListener("change", () => { F.sort = sSel.value; applyFilters(); });
+
+  let t = 0;
+  $("#q").addEventListener("input", (e) => {
+    clearTimeout(t);
+    t = setTimeout(() => { F.q = e.target.value; applyFilters(); }, 120);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName) && !modalOpen){
+      e.preventDefault();
+      $("#q").focus();
+    }
+  });
+  $("#btnClear").addEventListener("click", resetFilters);
+
+  syncChips();
+}
+
+/* ==========================================================================
+   Sincronización: el módulo de login (más abajo) sube y baja el progreso de la
+   cuenta con esta API. Gana, por obra, el cambio más reciente.
+   ========================================================================== */
+function sanitize(s){
+  const o = {};
+  if (!s || typeof s !== "object") return o;
+  if (s.del === true) o.del = true;
+  if (STATUSES.includes(s.status)) o.status = s.status;
+  for (const k of ["cap", "total"]) if (s[k] === null || (typeof s[k] === "number" && isFinite(s[k]) && s[k] >= 0)) o[k] = s[k];
+  if (s.rating === null || (typeof s.rating === "number" && s.rating >= 0 && s.rating <= 10)) o.rating = s.rating;
+  if (typeof s.fav === "boolean") o.fav = s.fav;
+  if (typeof s.notes === "string") o.notes = s.notes.slice(0, 500);
+  if (typeof s.updated === "number" && isFinite(s.updated)) o.updated = s.updated;
+  return o;
+}
+
+function mergeRemote(remote){
+  let n = 0;
+  Object.entries(remote || {}).forEach(([id, s]) => {
+    const clean = sanitize(s);
+    if (!Object.keys(clean).length) return;
+    const cur = STATE[id];
+    if (!cur || (clean.updated || 0) > (cur.updated || 0)){ STATE[id] = clean; n++; }
+  });
+  if (n){
+    flushState();
+    CARD_BY_ID.forEach(renderCard);
+    updateStats();
+    applyFilters(true);
+  }
+  return n;
+}
+
+let PROGRESS_READY = () => {};
+window.vestigiosProgress = {
+  ready: new Promise(res => { PROGRESS_READY = res; }),
+  get: () => STATE,
+  merge: mergeRemote,
+  clear(){ STATE = {}; flushState(); CARD_BY_ID.forEach(renderCard); updateStats(); applyFilters(true); },
+  toast,
+};
+
+/* ==========================================================================
+   Ficha de edición (diálogo nativo): estado, capítulo, nota, favorito…
+   ========================================================================== */
+let modalOpen = false;
+let edCard = null, edDirty = false;
+
+function onItemChanged(item){
+  const card = CARD_BY_ID.get(item.id);
+  if (card) renderCard(card);
+  updateStats();
+  edDirty = true;
+}
+
+function fillEditor(){
+  const item = edCard._item, v = view(item);
+  $("#edTitle").textContent = item.title;
+  $("#edMeta").textContent = [DATA[item.cat].label.replace(/s$/, ""), item.genre, item.year].filter(Boolean).join(" · ");
+  $("#edImg").src = cardImg(edCard);
+  $("#edImg").alt = item.title;
+  $("#edStatus").value = v.status || "Pendiente";
+  const fav = $("#edFav");
+  fav.setAttribute("aria-pressed", v.fav ? "true" : "false");
+  $("#edCap").value = v.cap == null ? "" : v.cap;
+  $("#edTotal").value = v.total ? v.total : "";
+  const r = ratingOf(v);
+  $("#edRating").value = r == null ? "" : fmt(r);
+  $("#edNotes").value = v.notes || "";
+  $("#edFile").textContent = `${COVER_DIR}${item.cat}-${item.slug}.webp`;
+  $("#edUpdated").textContent = v.updated
+    ? "Último cambio: " + new Date(v.updated).toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" })
+    : "Sin cambios guardados";
+  $("#edReset").hidden = !hasOwn(item.id);
+}
+
+function openEditor(card){
+  edCard = card;
+  edDirty = false;
+  fillEditor();
+  modalOpen = true;
+  document.body.classList.add("is-modal");
+  $("#editor").showModal();
+}
+
+function setupEditor(){
+  const ed = $("#editor");
+  const item = () => edCard._item;
+  const cur  = () => view(item());
+
+  ed.addEventListener("close", () => {
+    modalOpen = false;
+    document.body.classList.remove("is-modal");
+    if (edCard){
+      if (!edCard.hidden) edCard.focus({ preventScroll: true });
+      if (edDirty) applyFilters(true);
+    }
+  });
+  ed.addEventListener("click", (e) => { if (e.target === ed) ed.close(); });   // clic en el fondo
+  $("#edClose").addEventListener("click", () => ed.close());
+
+  const setStatus = (s) => { patch(item(), { status: s }); $("#edStatus").value = s; };
+
+  $("#edStatus").addEventListener("change", (e) => {
+    patch(item(), { status: e.target.value });
+    const total = totalOf(cur());
+    if (e.target.value === "Completado" && total && capOf(cur()) < total){      // completado = al día con el total
+      patch(item(), { cap: total });
+      $("#edCap").value = total;
+    }
+    fillMeta();
+  });
+
+  $("#edFav").addEventListener("click", () => {
+    const on = !cur().fav;
+    patch(item(), { fav: on });
+    $("#edFav").setAttribute("aria-pressed", on ? "true" : "false");
+    fillMeta();
+  });
+
+  const setCap = (cap) => {
+    patch(item(), { cap });
+    if (cap != null && cap > 1 && (cur().status || "Pendiente") === "Pendiente") setStatus("En curso");
+    fillMeta();
+  };
+  $("#edCap").addEventListener("input", (e) => {
+    const n = parseFloat(e.target.value);
+    setCap(isNaN(n) ? null : Math.max(0, n));
+  });
+  $("#edCapPlus").addEventListener("click", () => {
+    const n = Math.floor(capOf(cur())) + 1;
+    $("#edCap").value = n;
+    setCap(n);
+  });
+  $("#edCapMinus").addEventListener("click", () => {
+    const n = Math.max(0, Math.ceil(capOf(cur())) - 1);
+    $("#edCap").value = n;
+    setCap(n);
+  });
+
+  $("#edTotal").addEventListener("input", (e) => {
+    const n = parseFloat(e.target.value);
+    patch(item(), { total: isNaN(n) || n <= 0 ? null : n });
+  });
+  $("#edRating").addEventListener("input", (e) => {
+    let n = parseFloat(e.target.value);
+    if (isNaN(n)) n = null;
+    else if (n > 10){ n = 10; e.target.value = "10"; }
+    else if (n < 0){ n = 0; e.target.value = "0"; }
+    patch(item(), { rating: n });
+  });
+  $("#edNotes").addEventListener("input", (e) => patch(item(), { notes: e.target.value.slice(0, 500) }));
+
+  $("#edReset").addEventListener("click", () => {
+    STATE[item().id] = { del: true, updated: Date.now() };   // lápida: así el reset también viaja a la nube
+    saveState();
+    onItemChanged(item());
+    fillEditor();
+    toast("Vuelto a los datos originales");
+  });
+
+  function fillMeta(){
+    $("#edUpdated").textContent = "Último cambio: " + new Date(cur().updated || Date.now())
+      .toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" });
+    $("#edReset").hidden = !hasOwn(item().id);
+  }
+
+  $("#edStatus").innerHTML = STATUSES.map(s => `<option>${s}</option>`).join("");
 }
 
 /* ==========================================================================
@@ -1590,29 +2340,32 @@ function attachParallax(card){
    teclado, deriva automática y entrada escalonada.
    ========================================================================== */
 function setupRail(rail, index){
-  const { scroller, section } = rail;
-  const cards = [...scroller.querySelectorAll(".card")];
+  const { scroller, section, cards } = rail;
   if (!cards.length) return;
 
   /* --- foco: sin leer el layout en cada frame ---------------------------
-     Las posiciones se miden una vez (y al redimensionar). Después el foco
-     sale de scrollLeft, y solo se escribe en las tarjetas que cambian. */
+     Las posiciones se miden una vez (y al filtrar/redimensionar). Después el
+     foco sale de scrollLeft, y solo se escribe en las tarjetas que cambian. */
+  let vis = cards.slice();           // tarjetas visibles, en el orden en que se ven
   let metrics = [];
+
   function measure(){
     const pad = parseFloat(getComputedStyle(cards[0]).paddingLeft) || 0;
-    metrics = cards.map(c => ({ c, mid: c.offsetLeft + pad + (c.offsetWidth - pad) / 2, f: -1, far: null }));
+    metrics = vis.map(c => ({ c, mid: c.offsetLeft + pad + (c.offsetWidth - pad) / 2, f: -1, far: null }));
   }
 
   function update(){
     const half = scroller.clientWidth / 2;
-    if (!half) return;
+    if (!half || !metrics.length) return;
     const center = scroller.scrollLeft + half;
     let best = null, bestVal = -1;
 
     for (const m of metrics){
       const dist = Math.abs(center - m.mid);
-      const far = dist > half * 2.4;                // fuera de pantalla: no se pinta (rieles de 200+ tarjetas)
+      const far = dist > half * 2.4;                // fuera de pantalla: no se pinta
       if (far !== m.far){ m.c.classList.toggle("is-far", far); m.far = far; }
+      if (rail.near && !m.c._probed && dist < half * 1.5) probeCover(m.c);
+
       const norm = Math.max(0, 1 - dist / half);
       if (norm !== m.f){
         m.c.style.setProperty("--focus", norm.toFixed(3));
@@ -1627,10 +2380,25 @@ function setupRail(rail, index){
         best.classList.add("is-focus");
         rail.focusCard = best;
       }
-      rail.focusedImg = best.dataset.img;
+      rail.focusedImg = cardImg(best);
       if (rail === activeRail) setBackdrop(rail.focusedImg);
     }
   }
+
+  /* se llama tras filtrar / reordenar */
+  let roving = cards[0];
+  function refresh(){
+    vis = cards.filter(c => !c.hidden).sort((a, b) => a._order - b._order);
+    if (rail.focusCard){ rail.focusCard.classList.remove("is-focus"); rail.focusCard = null; }
+    if (!roving || roving.hidden){
+      if (roving) roving.tabIndex = -1;
+      roving = vis[0] || null;
+      if (roving) roving.tabIndex = 0;
+    }
+    measure();
+    update();
+  }
+  rail.refresh = refresh;
 
   let ticking = false;
   scroller.addEventListener("scroll", () => {
@@ -1640,30 +2408,43 @@ function setupRail(rail, index){
     }
   }, { passive: true });
 
-  function remeasure(){ measure(); update(); }
-  window.addEventListener("resize", remeasure);
-  window.addEventListener("load", remeasure);
-  remeasure();
+  window.addEventListener("resize", refresh);
+  window.addEventListener("load", refresh);
+  refresh();
 
-  /* --- teclado: un solo tab-stop por riel, flechas para moverse --------- */
-  let roving = cards[0];
+  // portadas: solo se buscan cuando el riel está cerca de la pantalla
+  new IntersectionObserver(([entry]) => {
+    rail.near = entry.isIntersecting;
+    if (rail.near) update();
+  }, { rootMargin: "500px 0px" }).observe(section);
+
+  /* --- teclado: un solo tab-stop por riel, flechas para moverse, Enter abre */
   roving.tabIndex = 0;
   scroller.addEventListener("focusin", (e) => {
     const c = e.target.closest(".card");
     if (!c || c === roving) return;
-    roving.tabIndex = -1;
+    if (roving) roving.tabIndex = -1;
     c.tabIndex = 0;
     roving = c;
   });
   scroller.addEventListener("keydown", (e) => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     const c = e.target.closest(".card");
-    if (!c) return;
-    const next = cards[cards.indexOf(c) + (e.key === "ArrowRight" ? 1 : -1)];
+    if (!c || e.target !== c) return;
+    if (e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      openEditor(c);
+      return;
+    }
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const next = vis[vis.indexOf(c) + (e.key === "ArrowRight" ? 1 : -1)];
     if (!next) return;
     e.preventDefault();
     next.focus({ preventScroll: true });
     next.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  });
+  scroller.addEventListener("click", (e) => {
+    const c = e.target.closest(".card");
+    if (c) openEditor(c);
   });
 
   scroller.addEventListener("pointerenter", () => setActiveRail(rail));
@@ -1683,12 +2464,12 @@ function setupRail(rail, index){
 
   /* --- deriva automática -------------------------------------------------
      Lenta y continua. Se pausa con hover, toque, foco, pestaña oculta, riel
-     fuera de pantalla, o si alguien mueve el riel a mano (botones, barra,
-     teclado). El snap solo se activa mientras se interactúa con toque/teclado. */
+     fuera de pantalla, ficha abierta, o si alguien mueve el riel a mano. El
+     snap solo se activa mientras se interactúa con toque/teclado. */
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const state = { hover: false, touch: false, focus: false, hidden: document.hidden, visible: true, until: 0 };
-  const isPaused = (t) => state.hover || state.touch || state.focus || state.hidden || !state.visible || t < state.until;
+  const isPaused = (t) => modalOpen || state.hover || state.touch || state.focus || state.hidden || !state.visible || t < state.until;
   const snap = (on) => { scroller.style.scrollSnapType = on ? "x mandatory" : "none"; };
 
   scroller.addEventListener("vestigios:manual", () => { state.until = performance.now() + 3000; });
@@ -1735,7 +2516,6 @@ function setupRail(rail, index){
 
     if (pos >= maxScroll - 1){
       // fin del riel: espera un momento y vuelve al inicio de golpe
-      // (un scroll suave a lo largo de cientos de tarjetas era eterno y chocaba con la deriva)
       resetting = true;
       setTimeout(() => { scroller.scrollLeft = 0; pos = 0; last = null; resetting = false; }, 1600);
       return;
@@ -1779,28 +2559,31 @@ function attachSectionObserver(railsById){
    Init
    ========================================================================== */
 function init(){
+  loadState();
   warnDuplicates();
   buildNav();
-  buildStats();
+  buildToolbar();
+  setupEditor();
 
-  const rails = [];
   const railsById = new Map();
   Object.entries(DATA).forEach(([key, cat], i) => {
     const rail = buildRail(key, cat);
-    rails.push(rail);
+    railsList.push(rail);
     railsById.set(`rail-${key}`, rail);
-    rail.scroller.querySelectorAll(".card").forEach(attachParallax);
+    rail.cards.forEach(attachParallax);
     setupRail(rail, i);
   });
 
+  updateStats();
   attachSectionObserver(railsById);
 
   // fondo inicial: el riel de arriba gobierna
-  setActiveRail(rails[0]);
+  setActiveRail(railsList[0]);
   if (!currentBackdrop){
-    const first = rails[0].scroller.querySelector(".card");
-    if (first) setBackdrop(first.dataset.img);
+    const first = railsList[0].cards[0];
+    if (first) setBackdrop(cardImg(first));
   }
+  PROGRESS_READY();
 }
 
 document.addEventListener("DOMContentLoaded", init);
@@ -1879,7 +2662,7 @@ function setMode(m){
 function busy(on){ [el.submit, el.google, el.toggle, el.forgot].forEach(b => b.disabled = on); }
 
 /* ---------- abrir / cerrar el login ---------- */
-const lockables = () => [document.querySelector(".topbar"), document.getElementById("rails")];
+const lockables = () => [document.querySelector(".topbar"), document.querySelector(".toolbar"), document.getElementById("rails"), document.getElementById("empty")];
 
 function openLogin(){
   if (!el.login.hidden) return;
@@ -2017,6 +2800,93 @@ function renderAuth(user){
   el.box.append(avatar, name, out);
 }
 
+/* ---------- progreso en la nube: Firestore, documento users/{uid}, campo "progreso" ----------
+   Con sesión: se baja lo de la cuenta, se mezcla con lo local (gana el cambio más reciente por
+   obra) y cada cambio nuevo se sube solo. Sin sesión: todo sigue en localStorage. Si Firestore
+   falla, el login no se ve afectado. */
+const Cloud = (() => {
+  const KEY = "vestigios:cuenta";
+  const GUEST = "Progreso guardado solo en este navegador · entra para guardarlo en tu cuenta";
+  const note = (t) => { const n = document.getElementById("syncNote"); if (n) n.textContent = t; };
+  const prog = () => window.vestigiosProgress;
+  let L = null, lib = null, ref = null, unsub = null, uid = null, timer = 0, pushed = {};
+
+  function why(err){
+    return err && err.code === "permission-denied"
+      ? "No se pudo guardar en tu cuenta: revisa las reglas de Firestore"
+      : "Sin conexión con la nube · se guarda en este navegador";
+  }
+
+  async function push(){
+    const p = prog();
+    if (!p || !ref || !uid) return;
+    const out = {}, prev = {};
+    for (const [id, s] of Object.entries(p.get())){
+      const u = (s && s.updated) || 0;
+      if (u > (pushed[id] || 0)){ out[id] = JSON.parse(JSON.stringify(s)); prev[id] = pushed[id]; pushed[id] = u; }
+    }
+    const ids = Object.keys(out);
+    if (!ids.length) return;
+    const myUid = uid;
+    try{
+      await L.setDoc(ref, { progreso: out }, { mergeFields: ids.map(id => new L.FieldPath("progreso", id)) });
+      if (uid === myUid) note("Guardado en tu cuenta");
+    }catch(err){
+      console.error("[VESTIGIOS] firestore:", err);
+      if (uid !== myUid) return;
+      ids.forEach(id => { pushed[id] = prev[id]; });      // se reintenta en el próximo cambio
+      note(why(err));
+    }
+  }
+
+  async function setUser(user){
+    if (unsub){ unsub(); unsub = null; }
+    clearTimeout(timer);
+    ref = null; uid = null; pushed = {};
+    if (!user){ note(GUEST); return; }
+    const myUid = user.uid;
+    uid = myUid;
+    note("Sincronizando…");
+    try{
+      const p = prog();
+      if (!p) return;
+      await p.ready;
+      lib = lib || import(SDK + "firebase-firestore.js");
+      L = await lib;
+      if (uid !== myUid) return;
+      let before = null;
+      try{ before = localStorage.getItem(KEY); localStorage.setItem(KEY, myUid); }catch(e){}
+      if (before && before !== myUid) p.clear();           // otra cuenta usó este navegador: no mezclar
+      ref = L.doc(L.getFirestore(fb.app), "users", myUid);
+      unsub = L.onSnapshot(ref, (snap) => {
+        if (uid !== myUid) return;
+        if (snap.metadata.fromCache){ note("Sin conexión con la nube · se guarda en este navegador"); return; }
+        const remote = (snap.exists() && snap.data().progreso) || {};
+        p.merge(remote);
+        for (const [id, r] of Object.entries(remote)) pushed[id] = Math.max(pushed[id] || 0, (r && r.updated) || 0);
+        note("Guardado en tu cuenta");
+        push();
+      }, (err) => {
+        console.error("[VESTIGIOS] firestore:", err);
+        if (uid === myUid) note(why(err));
+      });
+    }catch(err){
+      lib = null;
+      console.error("[VESTIGIOS] No se pudo cargar Firestore:", err);
+      if (uid === myUid) note("No se pudo conectar con la nube · se guarda en este navegador");
+    }
+  }
+
+  window.addEventListener("vestigios:changed", () => {
+    if (!ref) return;
+    clearTimeout(timer);
+    timer = setTimeout(push, 700);
+  });
+  window.addEventListener("pagehide", () => { clearTimeout(timer); push(); });
+
+  return { setUser };
+})();
+
 /* ---------- arranque ---------- */
 async function start(){
   setMode("login");
@@ -2033,14 +2903,16 @@ async function start(){
       import(SDK + "firebase-app.js"),
       import(SDK + "firebase-auth.js"),
     ]);
-    const auth = A.getAuth(appMod.initializeApp(firebaseConfig));
+    const app = appMod.initializeApp(firebaseConfig);
+    const auth = A.getAuth(app);
     auth.languageCode = "es";   // correos de Firebase en español
-    fb = { auth, A };
+    fb = { auth, A, app };
 
     A.onAuthStateChanged(auth, (user) => {
       renderAuth(user);
       window.vestigiosUser = user;   // para enlazar después notas/progreso por usuario
       window.dispatchEvent(new CustomEvent("vestigios:auth", { detail: { user } }));
+      Cloud.setUser(user);
       if (user) closeLogin();
       else if (REQUIRE_LOGIN) openLogin();
     });
