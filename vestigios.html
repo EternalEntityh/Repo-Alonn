@@ -54,7 +54,10 @@
   --t-slow: 900ms;
 }
 
-*{ box-sizing: border-box; }
+*{
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;   /* sin destello azul al tocar en móvil */
+}
 [hidden]{ display: none !important; }
 html{ scroll-behavior: smooth; }
 
@@ -384,6 +387,11 @@ main{
   filter: brightness(calc(0.65 + (var(--focus) * 0.35))) saturate(calc(0.7 + (var(--focus) * 0.3)));
   transition: transform 340ms var(--ease), opacity 340ms var(--ease), filter var(--t-fast) var(--ease);
   z-index: calc(var(--focus) * 10);
+
+  /* móvil: tocar una tarjeta no selecciona texto ni abre el menú de pulsación larga */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .card.is-far{ visibility: hidden; }
@@ -696,14 +704,6 @@ select.field-input{ cursor: pointer; padding-right: 8px; }
   border: 1px solid var(--line);
   background: var(--bg-2);
 }
-.editor__file{
-  margin: 10px 0 0;
-  font-family: var(--f-mono);
-  font-size: 10px;
-  line-height: 1.5;
-  color: var(--text-faint);
-  word-break: break-all;
-}
 .editor__body{ display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .editor__meta{ margin: 0; font-family: var(--f-mono); font-size: 11px; color: var(--text-faint); letter-spacing: .03em; }
 .editor__title{
@@ -971,7 +971,6 @@ select.field-input{ cursor: pointer; padding-right: 8px; }
       <div class="editor__cover">
         <div>
           <img id="edImg" alt="">
-          <p class="editor__file" id="edFile"></p>
         </div>
       </div>
       <div class="editor__body">
@@ -2151,7 +2150,6 @@ function fillEditor(){
   const r = ratingOf(v);
   $("#edRating").value = r == null ? "" : fmt(r);
   $("#edNotes").value = v.notes || "";
-  $("#edFile").textContent = `${COVER_DIR}${item.cat}-${item.slug}.webp`;
   $("#edUpdated").textContent = v.updated
     ? "Último cambio: " + new Date(v.updated).toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" })
     : "Sin cambios guardados";
