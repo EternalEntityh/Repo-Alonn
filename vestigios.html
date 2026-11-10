@@ -1068,6 +1068,99 @@ function mk(title, genre, cap, flag){
 }
 const rows = (genre, list) => list.map(([title, cap, flag]) => mk(title, genre, cap, flag));
 
+/* ==========================================================================
+   PARCHE ANIME — continuaciones, películas y obras que lees en manga/novela.
+   ep(): como mk() pero con episodios totales (barra de avance), año y subtítulo.
+   Sin capítulo = Pendiente.
+   ========================================================================== */
+function ep(title, genre, total, year, sub, cap){
+  const it = mk(title, genre, cap == null ? 0 : cap);   // sin cap = Pendiente
+  if (total) it.total = total;                          // episodios (para la barra de avance)
+  if (year)  it.year  = year;
+  if (sub)   it.sub   = sub;
+  return it;
+}
+const eps = (genre, list) => list.map(([t, n, y, s]) => ep(t, genre, n, y, s));
+const MOVIE = "Película", OVA = "Especial";
+
+const ANIME_EXTRA = [
+  // — continuaciones y películas que faltaban —
+  ...eps("Acción", [
+    ["Vinland Saga Season 2", 24, 2023],
+    ["Jujutsu Kaisen 0", 1, 2021, MOVIE],
+    ["Jujutsu Kaisen 2nd Season", 23, 2023],
+    ["Jujutsu Kaisen 3rd Season: The Culling Game Part 1", 12, 2026],
+    ["Kaijuu 8-gou: Mission Recon", 1, 2025, MOVIE],
+    ["Kaijuu 8-gou 2nd Season", 11, 2025],
+    ["Overlord Movie 1: Fushisha no Ou", 1, 2017, MOVIE],
+    ["Overlord Movie 2: Shikkoku no Eiyuu", 1, 2017, MOVIE],
+    ["Attack on Titan Season 2", 12, 2017],
+    ["Attack on Titan Season 3", 12, 2018],
+    ["Attack on Titan Season 3 Part 2", 10, 2019],
+    ["Attack on Titan: The Final Season", 16, 2020],
+    ["Attack on Titan: The Final Season Part 2", 12, 2022],
+    ["Attack on Titan: The Final Chapters Special 1", 1, 2023, OVA],
+    ["Attack on Titan: The Final Chapters Special 2", 1, 2023, OVA],
+    ["Cowboy Bebop: The Movie", 1, 2001, MOVIE],
+    ["Mob Psycho 100 II", 13, 2019],
+    ["Mob Psycho 100 III", 12, 2022],
+    ["Jigokuraku", 13, 2023],
+    ["Jigokuraku 2nd Season", 12, 2026],
+    ["Fullmetal Alchemist: Brotherhood", 64, 2009],
+    // los que lees en manga
+    ["Dandadan", 12, 2024],
+    ["Dandadan 2nd Season", 12, 2025],
+    ["Blue Lock", 24, 2022],
+    ["Blue Lock: Episode Nagi", 1, 2024, MOVIE],
+    ["Blue Lock 2nd Season", 14, 2024],
+    ["Dorohedoro", 12, 2020],
+  ]),
+  ...eps("Fantasía", [
+    ["Frieren 2nd Season", 10, 2026],
+    ["Tensei shitara Slime Datta Ken 4th Season", null, 2026],
+    ["Tensei shitara Slime Datta Ken Movie 2: Tears of the Azure Sea", 1, 2026, MOVIE],
+    ["Made in Abyss: Dawn of the Deep Soul", 1, 2020, MOVIE],
+    ["Made in Abyss: The Golden City of the Scorching Sun", 12, 2022],
+    ["Dungeon Meshi", 24, 2024],
+    // los que tienes en novela / manga
+    ["Berserk (1997)", 25, 1997],
+    ["Berserk: The Golden Age Arc I - The Egg of the King", 1, 2012, MOVIE],
+    ["Berserk: The Golden Age Arc II - The Battle for Doldrey", 1, 2012, MOVIE],
+    ["Berserk: The Golden Age Arc III - The Advent", 1, 2013, MOVIE],
+    ["Berserk (2016)", 12, 2016],
+    ["Berserk Season 2 (2017)", 12, 2017],
+    ["Re:Zero kara Hajimeru Isekai Seikatsu", 25, 2016],
+    ["Re:Zero: Memory Snow", 1, 2018, MOVIE],
+    ["Re:Zero: The Frozen Bond", 1, 2019, MOVIE],
+    ["Re:Zero 2nd Season", 13, 2020],
+    ["Re:Zero 2nd Season Part 2", 12, 2021],
+    ["Re:Zero 3rd Season", 16, 2024],
+    ["Re:Zero 4th Season", null, 2026],
+    ["Mushoku Tensei: Isekai Ittara Honki Dasu", 11, 2021],
+    ["Mushoku Tensei: Isekai Ittara Honki Dasu Part 2", 12, 2021],
+    ["Mushoku Tensei II: Isekai Ittara Honki Dasu", 12, 2023],
+    ["Mushoku Tensei II: Isekai Ittara Honki Dasu Part 2", 12, 2024],
+  ]),
+  ...eps("Comedia", [
+    ["Kono Subarashii Sekai ni Shukufuku wo!", 10, 2016],
+    ["Kono Subarashii Sekai ni Shukufuku wo! 2", 10, 2017],
+    ["Kono Subarashii Sekai ni Shukufuku wo! Movie: Kurenai Densetsu", 1, 2019, MOVIE],
+    ["Kono Subarashii Sekai ni Shukufuku wo! 3", 11, 2024],
+  ]),
+  ...eps("Drama", [
+    ["Oshi no Ko", 11, 2023],              // mismo título que tu card actual → conserva su progreso guardado
+    ["Oshi no Ko 2nd Season", 13, 2024],
+    ["Oshi no Ko 3rd Season", 11, 2026],
+  ]),
+  ...eps("Thriller", [
+    ["Monster", 74, 2004],
+    ["Tokyo Ghoul", 12, 2014],
+    ["Tokyo Ghoul √A", 12, 2015],
+    ["Tokyo Ghoul:re", 12, 2018],
+    ["Tokyo Ghoul:re 2nd Season", 12, 2018],
+  ]),
+];
+
 const DATA = {
   anime: {
     label: "Animes",
@@ -1135,7 +1228,6 @@ const DATA = {
         ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 2nd Season", 13, "done"],
         ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 3rd Season", 13, "done"],
         ["Kaoru Hana wa Rin to Saku", 1],
-        ["Oshi no ko", null],
       ]),
       ...rows("Fantasía", [
         ["Tensei Shitara Slime Datta Ken", 25, "done"],
@@ -1150,9 +1242,10 @@ const DATA = {
         ["Maou Gakuin no Futekigousha II", 1],
         ["Isekai Mokushiroku Mynoghra: Hametsu no Bunmei de Hajimeru Sekai Seifuku", 13, "done"],
       ]),
-      ...rows("Misterio", [
-        ["Hyouka", 12],
-      ]),
+      // Hyouka: antes ["Hyouka", 12] — ahora con total de 22 episodios (cap 12 se mantiene)
+      ep("Hyouka", "Misterio", 22, 2012, null, 12),
+      // continuaciones, películas y obras que lees en manga/novela
+      ...ANIME_EXTRA,
     ],
   },
   manga: {
