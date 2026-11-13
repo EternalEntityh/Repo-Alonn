@@ -1667,6 +1667,223 @@ const DATA = {
 };
 
 /* ==========================================================================
+   OBRAS NUEVAS — descubrimientos para sumar a VESTIGIOS
+   ---------------------------------------------------------------------------
+   DÓNDE PEGAR: en vestigios.html, justo DESPUÉS del cierre de `const DATA = {...};`
+   y ANTES del bloque "Utilidades" (el que empieza con `const railsEl = ...`).
+   Tiene que ir ahí porque los ids/slugs de las tarjetas se calculan justo después.
+
+   - Todo entra como "Pendiente" (por descubrir). Lo marcas en la ficha al verlo/leerlo.
+   - Si un título ya existe en esa categoría (aunque cambie mayúsculas, tildes o
+     signos), se omite solo: no hay repetidos.
+   - Usa los helpers que ya tienes (mk, ep, eps, MOVIE). No toca nada más.
+   ========================================================================== */
+const ob = (genre, list) => list.map(([t, y]) => {
+  const it = mk(t, genre, 0);              // cap 0 → "Pendiente"
+  if (y) it.year = y;
+  return it;
+});
+
+const NUEVAS = {
+  anime: [
+    ...eps("Acción", [
+      ["Hunter x Hunter (2011)", 148, 2011],
+      ["Chainsaw Man", 12, 2022],
+      ["Chainsaw Man: Reze-hen", 1, 2025, MOVIE],
+      ["Black Lagoon", 12, 2006],
+      ["Trigun Stampede", 12, 2023],
+      ["Cyberpunk: Edgerunners", 10, 2022],
+      ["Claymore", 26, 2007],
+      ["Samurai Champloo", 26, 2004],
+      ["Hellsing Ultimate", 10, 2006],
+      ["Lycoris Recoil", 13, 2022],
+      ["JoJo's Bizarre Adventure: Steel Ball Run", null, 2026],
+      ["Sentenced to Be a Hero", null, 2026],
+    ]),
+    ...eps("Aventura", [
+      ["Golden Kamuy", 12, 2018],
+      ["Golden Kamuy 2nd Season", 12, 2018],
+      ["Golden Kamuy 3rd Season", 12, 2020],
+      ["Golden Kamuy 4th Season", 13, 2022],
+      ["Golden Kamuy Final Season", null, 2026],
+      ["Dr. Stone", 24, 2019],
+      ["Daemons of the Shadow Realm", null, 2026],
+    ]),
+    ...eps("Fantasía", [
+      ["Goblin Slayer", 12, 2018],
+      ["Fate/Zero", 25, 2011],
+      ["Fumetsu no Anata e (To Your Eternity)", 20, 2021],
+      ["Fumetsu no Anata e 2nd Season", 20, 2022],
+      ["Houseki no Kuni (Land of the Lustrous)", 12, 2017],
+      ["Tongari Boushi no Atelier (Witch Hat Atelier)", null, 2026],
+      ["Tougen Anki", null, 2026],
+    ]),
+    ...eps("Thriller", [
+      ["Death Note", 37, 2006],
+      ["Kiseijuu: Sei no Kakuritsu (Parasyte)", 24, 2014],
+      ["Psycho-Pass", 22, 2012],
+      ["Boku dake ga Inai Machi (Erased)", 12, 2016],
+      ["Code Geass: Hangyaku no Lelouch", 25, 2006],
+      ["Code Geass: Hangyaku no Lelouch R2", 25, 2008],
+    ]),
+    ...eps("Ciencia ficción", [
+      ["Steins;Gate", 24, 2011],
+    ]),
+    ...eps("Misterio", [
+      ["Kusuriya no Hitorigoto (The Apothecary Diaries)", 24, 2023],
+      ["Kusuriya no Hitorigoto 2nd Season", 24, 2025],
+      ["Kusuriya no Hitorigoto 3rd Season", null, 2026],
+    ]),
+    ...eps("Drama", [
+      ["3-gatsu no Lion (March Comes in Like a Lion)", 22, 2016],
+      ["Violet Evergarden", 13, 2018],
+      ["Shiguang Dailiren (Link Click)", 11, 2021],
+      ["Akane-banashi", null, 2026],
+    ]),
+  ],
+
+  manga: [
+    ...ob("Acción", [
+      ["Hunter x Hunter", 1998],
+      ["Fullmetal Alchemist", 2001],
+      ["Claymore", 2001],
+      ["Hellsing", 1997],
+      ["Black Lagoon", 2002],
+      ["JoJo's Bizarre Adventure: Steel Ball Run", 2004],
+    ]),
+    ...ob("Aventura", [
+      ["Golden Kamuy", 2014],
+      ["Daemons of the Shadow Realm", 2022],
+    ]),
+    ...ob("Fantasía", [
+      ["Sousou no Frieren", 2020],
+      ["Dungeon Meshi", 2014],
+      ["Tongari Boushi no Atelier", 2016],
+      ["Houseki no Kuni", 2012],
+    ]),
+    ...ob("Thriller", [
+      ["Death Note", 2003],
+      ["Kiseijuu", 1988],
+      ["Uzumaki", 1998],
+    ]),
+    ...ob("Ciencia ficción", [
+      ["Pluto", 2003],
+    ]),
+    ...ob("Drama", [
+      ["Real", 1999],
+      ["3-gatsu no Lion", 2007],
+      ["Oshi no Ko", 2020],
+      ["Akane-banashi", 2022],
+    ]),
+    ...ob("Comedia", [
+      ["Kaguya-sama wa Kokurasetai", 2015],
+    ]),
+  ],
+
+  manhwa: [
+    ...ob("Acción", [
+      ["Eleceed"],
+      ["Noblesse", 2007],
+      ["The God of High School", 2011],
+      ["Overgeared"],
+      ["Weak Hero", 2018],
+      ["Hardcore Leveling Warrior", 2012],
+      ["SSS-Class Revival Hunter"],
+      ["SSS-Class Suicide Hunter"],
+      ["The Knight Only Lives Today"],
+      ["Study Group"],
+      ["The Breaker", 2007],
+      ["The Breaker: New Waves", 2011],
+      ["Solo Necromancy"],
+      ["A Regressor's Tale of Cultivation", 2025],
+    ]),
+    ...ob("Artes marciales", [
+      ["Chronicles of the Heavenly Demon"],
+    ]),
+    ...ob("Romance", [
+      ["The Remarried Empress"],
+      ["True Beauty"],
+      ["Cheese in the Trap"],
+    ]),
+  ],
+
+  manhua: [
+    ...ob("Acción", [
+      ["Battle Through the Heavens"],
+      ["Tales of Demons and Gods"],
+      ["Against the Gods"],
+      ["The King's Avatar"],
+    ]),
+    ...ob("Fantasía", [
+      ["Soul Land"],
+      ["Perfect World"],
+      ["Apotheosis"],
+    ]),
+  ],
+
+  novela: [
+    ...ob("Acción", [
+      ["Omniscient Reader's Viewpoint"],
+      ["Solo Leveling"],
+      ["Circle of Inevitability"],
+    ]),
+    ...ob("Fantasía", [
+      ["The Beginning After the End"],
+      ["Trash of the Count's Family"],
+      ["Goblin Slayer"],
+    ]),
+    ...ob("Misterio", [
+      ["Hyouka"],
+      ["The Apothecary Diaries"],
+    ]),
+  ],
+
+  josei: [
+    ...ob("Drama", [
+      ["Nana"],
+      ["Paradise Kiss"],
+      ["Honey and Clover"],
+      ["Chihayafuru"],
+      ["Princess Jellyfish"],
+    ]),
+    ...ob("Romance", [
+      ["Who Made Me a Princess"],
+      ["Why Raeliana Ended Up at the Duke's Mansion"],
+      ["The Abandoned Empress"],
+      ["Beware of the Villainess!"],
+    ]),
+  ],
+
+  shoujo: [
+    ...ob("Drama", [
+      ["Fruits Basket"],
+      ["Akatsuki no Yona"],
+      ["Skip Beat!"],
+    ]),
+    ...ob("Romance", [
+      ["Kimi ni Todoke"],
+      ["Ouran High School Host Club"],
+      ["Ao Haru Ride"],
+    ]),
+  ],
+};
+
+/* Mezcla sin repetir: compara el título normalizado dentro de cada categoría */
+(function mergeNuevas(){
+  const norm = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+  Object.entries(NUEVAS).forEach(([cat, list]) => {
+    if (!DATA[cat]) return;
+    const seen = new Set(DATA[cat].items.map(i => norm(i.title)));
+    list.forEach(it => {
+      const k = norm(it.title);
+      if (seen.has(k)) return;
+      seen.add(k);
+      DATA[cat].items.push(it);
+    });
+  });
+})();
+
+/* ==========================================================================
    Utilidades
    ========================================================================== */
 const railsEl   = document.getElementById("rails");
