@@ -1339,7 +1339,6 @@ const DATA = {
       // — muestra original —
       { title: "Solo Leveling",              sub: "나 혼자만", year: 2018, rating: "9.0", status: "Completado", img: poster("solo-leveling") },
       { title: "Omniscient Reader",          sub: "전지적",   year: 2020, rating: "9.5", status: "Al día",     img: poster("omniscient-reader") },
-      { title: "The Beginning After the End", sub: "TBATE",  year: 2018, rating: "9.1", status: "Al día",     img: poster("tbate") },
       { title: "Tower of God",               sub: "신의 탑",   year: 2010, rating: "8.7", status: "Al día",     img: poster("tower-of-god") },
       { title: "Bastard",                    sub: "바스타드", year: 2014, rating: "8.9", status: "Completado", img: poster("bastard") },
       { title: "Sweet Home",                 sub: "스위트홈", year: 2017, rating: "8.5", status: "Completado", img: poster("sweet-home") },
@@ -1364,7 +1363,9 @@ const DATA = {
         ["Solo Leveling: Ragnarok", 47.5],
         ["Choi Siwoo el goblin nocturno", 100],
         ["Juvenile law", 51],
-        ["El mundo después del fin", 192],
+        ]),
+        { ...mk("El mundo después del fin", "Acción", 192), sub: "TBATE", year: 2018 },
+        ...rows("Acción", [
         ["Electricidad veloz", 354],
         ["Castle", 210],
         ["El extra de la novela (remake)", 131],
@@ -1425,7 +1426,6 @@ const DATA = {
         ["Fight Class 3", 108],
         ["Reality Quest", 181],
         ["Day Walker", 1],
-        ["El amor puro de la villana", 9],
         ["La vida después de la muerte", 202],
         ["Pedro el Asesino", 94],
         ["Manager Kim", 72],
@@ -1656,7 +1656,7 @@ const DATA = {
     items: [
       // — desde tus listas de Discord —
       ...rows("Drama", [
-        ["Pure Love Villain", 1],
+        ["Pure Love Villain", 9],
         ["La Chica Del Go", 1],
         ["La Madrastra Dé Márchen", 1],
         ["Robe El Alma Del Ranker Numero Uno", 1],
@@ -1868,10 +1868,320 @@ const NUEVAS = {
   ],
 };
 
+/* ==========================================================================
+   OBRAS NUEVAS 2 — segunda tanda. Todo entra como "Pendiente".
+   mergeNuevas procesa NUEVAS y NUEVAS2 y omite lo que ya exista en la categoría.
+   ========================================================================== */
+const NUEVAS2 = {
+  anime: [
+    ...eps("Acción", [
+      ["Bleach", 366, 2004],
+      ["Bleach: Thousand-Year Blood War", 13, 2022],
+      ["Bleach: Thousand-Year Blood War - The Separation", null, 2023],
+      ["Bleach: Thousand-Year Blood War - The Conflict", null, 2024],
+      ["One Piece", null, 1999],
+      ["Black Clover", 170, 2017],
+      ["Black Clover: Sword of the Wizard King", 1, 2023, MOVIE],
+      ["Black Clover Season 2", null, 2026],
+      ["Enen no Shouboutai", 24, 2019],
+      ["Enen no Shouboutai: Ni no Shou", 24, 2020],
+      ["Enen no Shouboutai: San no Shou", null, 2025],
+      ["Shuumatsu no Valkyrie", 12, 2021],
+      ["Sakamoto Days", null, 2025],
+      ["Gokurakugai", null, null],
+      ["Kagurabachi", null, null],
+      ["Hunter x Hunter: Phantom Rouge", 1, 2013, MOVIE],
+      ["Hunter x Hunter: The Last Mission", 1, 2013, MOVIE],
+      ["Black Lagoon: The Second Barrage", 12, 2006],
+      ["Black Lagoon: Roberta's Blood Trail", 5, 2010, OVA],
+      ["Hellsing", 13, 2001],
+      ["Trigun", 26, 1998],
+      ["Trigun: Badlands Rumble", 1, 2010, MOVIE],
+      ["Solo Leveling: ReAwakening", 1, 2024, MOVIE],
+      ["Attack on Titan: Chronicle", 1, 2020, MOVIE],
+      ["Fullmetal Alchemist (2003)", 51, 2003],
+      ["Fullmetal Alchemist: The Conqueror of Shamballa", 1, 2005, MOVIE],
+      ["Fullmetal Alchemist: The Sacred Star of Milos", 1, 2011, MOVIE],
+      ["Dandadan 3rd Season", null, 2027],
+      ["Blue Lock: Neo Egoist League", null, null, "Season 3"],
+      ["Cyberpunk: Edgerunners 2", null, 2026],
+      ["Dragon Ball Super: Beerus", null, 2026],
+      ["Gantz", 26, 2004],
+      ["Gantz 2nd Stage", null, null],
+      ["Gantz:O", 1, 2016, MOVIE],
+      ["Tower of God", 13, 2020],
+      ["Tower of God 2nd Season: Workshop Battle", null, 2024],
+      ["Noblesse", 13, 2020],
+      ["The God of High School", 13, 2020],
+      ["Wind Breaker", 13, 2024],
+      ["Wind Breaker 2nd Season", null, 2025],
+      ["Lookism", 8, 2022],
+    ]),
+    ...eps("Aventura", [
+      ["Dr. Stone: Stone Wars", 11, 2021],
+      ["Dr. Stone: Ryusui", 1, 2022, OVA],
+      ["Dr. Stone: New World", null, 2023],
+      ["Dr. Stone: Science Future", null, 2025],
+      ["Made in Abyss: Journey's Dawn", 1, 2019, MOVIE],
+      ["Made in Abyss: Wandering Twilight", 1, 2019, MOVIE],
+    ]),
+    ...eps("Fantasía", [
+      ["Goblin Slayer II", 12, 2023],
+      ["Goblin Slayer: Goblin's Crown", 1, 2020, MOVIE],
+      ["Mushoku Tensei: Eris no Goblin Slayer", null, 2023, OVA],
+      ["Overlord: Ple Ple Pleiades", null, 2018, OVA],
+      ["Berserk: Golden Age Arc Memorial Edition", 13, 2022],
+      ["Yasei no Last Boss ga Arawareta!", 12, 2023],
+      ["Yasei no Last Boss ga Arawareta! 2nd Season", null, 2026],
+      ["Magic Knight Rayearth", null, 2026],
+      ["Ousama Ranking", 23, 2021],
+      ["Mushishi", 26, 2005],
+    ]),
+    ...eps("Comedia", [
+      ["Spy x Family", 25, 2022],
+      ["Bocchi the Rock!", 12, 2022],
+      ["Gintama", 201, 2006],
+      ["Hamefura", 12, 2020],
+      ["Kono Subarashii Sekai ni Bakuen wo!", 12, 2023],
+      ["Ouran High School Host Club", 26, 2006],
+    ]),
+    ...eps("Romance", [
+      ["My Love Story with Yamada-kun at Lv999", 12, 2023],
+      ["Kimi ni Todoke", 25, 2009],
+      ["Ao Haru Ride", 12, 2014],
+      ["Ao no Hako", 25, 2024],
+      ["Ao no Hako 2nd Season", null, 2026],
+    ]),
+    ...eps("Thriller", [
+      ["Psycho-Pass 2", 11, 2014],
+      ["Psycho-Pass 3", 8, 2019],
+      ["Psycho-Pass: The Movie", 1, 2015, MOVIE],
+      ["Odd Taxi", 13, 2021],
+      ["Kaiji: Ultimate Survivor", 26, 2007],
+      ["Serial Experiments Lain", 13, 1998],
+      ["Ergo Proxy", 23, 2006],
+      ["Tengoku Daimakyou", 13, 2023],
+      ["Pluto", 8, 2023],
+      ["Uzumaki", 4, 2024],
+    ]),
+    ...eps("Ciencia ficción", [
+      ["Steins;Gate 0", 23, 2018],
+      ["Steins;Gate: Load Region of Déjà Vu", 1, 2013, MOVIE],
+      ["Code Geass: Lelouch of the Re;surrection", 1, 2019, MOVIE],
+      ["Neon Genesis Evangelion", 26, 1995],
+      ["Vivy: Fluorite Eye's Song", 13, 2021],
+    ]),
+    ...eps("Drama", [
+      ["3-gatsu no Lion 2nd Season", 22, 2017],
+      ["Link Click 2nd Season", null, 2023],
+      ["Violet Evergarden: Eternity and the Auto Memory Doll", 1, 2019, MOVIE],
+      ["Violet Evergarden: The Movie", 1, 2020, MOVIE],
+      ["Violet Evergarden: Recollections", 1, 2021, MOVIE],
+      ["Nana", 47, 2006],
+      ["Fruits Basket (2019)", 25, 2019],
+      ["Skip Beat!", 25, 2008],
+      ["Akatsuki no Yona", 24, 2014],
+      ["Honey and Clover", 24, 2005],
+      ["Paradise Kiss", 12, 2005],
+      ["Kuragehime", 11, 2010],
+      ["Otoyomegatari", 12, 2014],
+    ]),
+    ...eps("Deportes", [
+      ["Ao Ashi", 24, 2022],
+      ["Ao Ashi 2nd Season", null, 2026],
+      ["Chihayafuru", 25, 2011],
+    ]),
+  ],
+
+  manga: [
+    ...ob("Acción", [
+      ["Shingeki no Kyojin"], ["Mob Psycho 100"], ["Kimetsu no Yaiba"], ["Boku no Hero Academia"],
+      ["Naruto"], ["Blade of the Immortal"], ["Kingdom"], ["Tokyo Revengers"],
+      ["Jujutsu Kaisen Modulo"], ["RuriDragon"],
+    ]),
+    ...ob("Aventura", [["Made in Abyss"], ["Dr. Stone"]]),
+    ...ob("Fantasía", [
+      ["Overlord"], ["Tensei shitara Slime Datta Ken"], ["Re:Zero"], ["Mushoku Tensei"],
+      ["Kono Subarashii Sekai ni Shukufuku wo!"], ["Tate no Yuusha no Nariagari"],
+      ["Isekai Maou to Shoukan Shoujo no Dorei Majutsu"], ["Arifureta"],
+      ["Maou Gakuin no Futekigousha"], ["Seirei Gensouki"], ["Goblin Slayer"],
+    ]),
+    ...ob("Thriller", [["Ajin"], ["Kaiji"], ["Imawa no Kuni no Alice"], ["Liar Game"]]),
+    ...ob("Deportes", [["Haikyuu!!"], ["Ao Ashi"], ["Ping Pong"]]),
+    ...ob("Comedia", [
+      ["Spy x Family"], ["Grand Blue"], ["Kuroiwa Medaka ni Watashi no Kawaii ga Tsuujinai"],
+      ["Komi-san wa Komyushou Desu"],
+    ]),
+    ...ob("Romance", [
+      ["Horimiya"], ["Kanojo Okarishimasu"], ["Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san"],
+      ["Megami no Café Terrace"], ["Ao no Hako"],
+    ]),
+    ...ob("Drama", [["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e"]]),
+  ],
+
+  manhwa: [
+    ...ob("Fantasía", [
+      ["Dungeon Defense"], ["The Gamer"], ["Trash of the Count's Family"], ["The Greatest Estate Developer"],
+      ["Reformation of the Deadbeat Noble"], ["Dungeon Reset"], ["Regressor of the Fallen Family"],
+      ["The Tutorial Is Too Hard"],
+    ]),
+  ],
+
+  manhua: [
+    ...ob("Acción", [
+      ["Library of Heaven's Path"], ["The Great Ruler"], ["Throne of Seal"], ["Swallowed Star"],
+      ["Martial Universe"],
+    ]),
+  ],
+
+  novela: [
+    ...ob("Fantasía", [
+      ["A Practical Guide to Evil"], ["Mother of Learning"], ["Dungeon Defense"],
+      ["He Who Fights with Monsters"], ["Ascendance of a Bookworm"],
+    ]),
+    ...ob("Acción", [["Overgeared"]]),
+    ...ob("Aventura", [["Cradle"]]),
+  ],
+
+  shoujo: [
+    ...ob("Romance", [["Kaichou wa Maid-sama!"], ["Lovely Complex"], ["Dawn of the Arcana"]]),
+    ...ob("Drama", [["Vampire Knight"]]),
+  ],
+};
+
+/* ==========================================================================
+   OBRAS NUEVAS 3 — tercera tanda, sobre todo MANGAS. Todo entra como "Pendiente".
+   Fuentes de apoyo: listas de mejores mangas (Collider, JW Web Magazine, Siliconera,
+   Anime Collective), "Best New and Continuing Manga of 2025" de Anime News Network,
+   MyAnimeList y Comicbook/ScreenRant para lo más reciente (2025-2026).
+   mergeNuevas omite lo que ya exista en la categoría (aunque cambie tildes o signos).
+   ========================================================================== */
+const NUEVAS3 = {
+  manga: [
+    ...ob("Acción", [
+      ["Dragon Ball", 1984], ["Dragon Ball Super", 2015], ["Yu Yu Hakusho", 1990],
+      ["Rurouni Kenshin", 1994], ["Hokuto no Ken", 1983], ["Baki", 1991],
+      ["Kengan Ashura", 2012], ["Kengan Omega", 2019], ["Soul Eater", 2004],
+      ["D.Gray-man", 2004], ["Akame ga Kill!", 2010], ["Boruto: Two Blue Vortex", 2023],
+      ["Ao no Exorcist", 2009], ["Kuroshitsuji", 2006], ["Zom 100: Bucket List of the Dead", 2018],
+      ["Dai Dark"], ["Shigurui", 2003], ["Sun-Ken Rock", 2006], ["Jormungand", 2007],
+      ["Trigun Maximum", 1997], ["Initial D", 1995],
+      ["Ultimate Exorcist Kiyoshi", 2024], ["WITCHRIV", 2025], ["Cannon Master", 2026],
+    ]),
+    ...ob("Aventura", [
+      ["Ichi the Witch", 2025], ["Nausicaä of the Valley of the Wind", 1982],
+      ["Dragon Quest: Dai no Daibouken", 1989], ["Ushio to Tora", 1990],
+      ["Fumetsu no Anata e (To Your Eternity)", 2016], ["Mushishi", 1999],
+      ["Medaka Box", 2009], ["Magi: The Labyrinth of Magic", 2009],
+      ["Heavenly Delusion", 2018], ["Space Brothers", 2007],
+    ]),
+    ...ob("Fantasía", [
+      ["Nanatsu no Taizai", 2012], ["Mashle", 2020], ["Undead Unluck", 2020],
+      ["Mahoutsukai no Yome (The Ancient Magus' Bride)", 2013], ["Shangri-La Frontier", 2020],
+      ["Youjo Senki", 2016], ["Log Horizon", 2011], ["Hataraku Maou-sama!", 2012],
+      ["No Game No Life", 2012], ["Saint Seiya", 1986], ["Zatch Bell!", 2001],
+      ["Inuyasha", 1996], ["Yu-Gi-Oh!", 1996], ["Bastard!!", 1988], ["Pandora Hearts", 2006],
+      ["Kobayashi-san Chi no Maid Dragon", 2013], ["Sword Art Online", 2010],
+    ]),
+    ...ob("Ciencia ficción", [
+      ["Akira", 1982], ["Gunnm (Battle Angel Alita)", 1990], ["Ghost in the Shell", 1989],
+      ["Planetes", 1999], ["Knights of Sidonia", 2009], ["Eden: It's an Endless World!", 1998],
+      ["Bokurano: Ours", 2003], ["Terra Formars", 2011], ["Neon Genesis Evangelion", 1994],
+      ["Billy Bat", 2008],
+    ]),
+    ...ob("Thriller", [
+      ["Battle Royale", 2000], ["I Am a Hero", 2009], ["Btooom!", 2009], ["Gleipnir", 2015],
+      ["Platinum End", 2015], ["Deadman Wonderland", 2007], ["Mirai Nikki", 2006],
+      ["The Promised Neverland", 2016], ["Akagi", 1992], ["One Outs", 1998],
+      ["Tomodachi Game", 2012], ["Kakegurui", 2014], ["Prison School", 2011],
+      ["Boku dake ga Inai Machi (Erased)", 2012], ["Nijigahara Holograph", 2003],
+      ["Dead Dead Demon's Dededede Destruction", 2014],
+    ]),
+    ...ob("Terror", [
+      ["Tomie", 1987], ["Gyo", 2001], ["Hellstar Remina", 2005], ["Another", 2010],
+      ["Higurashi no Naku Koro ni", 2005], ["Natsu no Hikaru ga Shinda (The Summer Hikaru Died)", 2021],
+      ["#DRCL midnight children"],
+    ]),
+    ...ob("Misterio", [
+      ["Master Keaton", 1988], ["Kusuriya no Hitorigoto (The Apothecary Diaries)", 2017],
+      ["Kowloon Generic Romance"], ["Chi no Wadachi (Blood on the Tracks)", 2012],
+      ["Aku no Hana (The Flowers of Evil)", 2009],
+    ]),
+    ...ob("Drama", [
+      ["Bakuman", 2008], ["Blue Period", 2017], ["Blue Giant", 2013],
+      ["Shigatsu wa Kimi no Uso (Your Lie in April)", 2011], ["Solanin", 2005],
+      ["Happiness", 2014], ["Umi no Hotori (A Girl on the Shore)", 2009],
+      ["Look Back", 2021], ["Goodbye, Eri", 2022], ["Boys Run the Riot", 2021],
+      ["They Were Eleven", 1975], ["Spacewalking With You"],
+      ["Rainbow: Nisha Rokubou no Shichinin", 2002], ["Genshiken", 2002],
+    ]),
+    ...ob("Romance", [
+      ["Gotoubun no Hanayome", 2017], ["Nisekoi", 2011],
+      ["Sono Bisque Doll wa Koi wo Suru", 2018], ["Skip to Loafer", 2018],
+      ["Shikimori's Not Just a Cutie", 2015], ["Domestic na Kanojo", 2014],
+      ["Insomniacs After School", 2019], ["Tonikawa", 2018],
+      ["Karakai Jouzu no Takagi-san", 2013], ["Ijiranaide, Nagatoro-san", 2014],
+      ["A Star Brighter Than the Sun"],
+      ["The Guy She Was Interested In Wasn't a Guy at All"],
+    ]),
+    ...ob("Comedia", [
+      ["Gintama", 2003], ["Ranma ½", 1987], ["Saiki Kusuo no Psi-nan", 2011],
+      ["Yotsuba&!", 2003], ["Nichijou", 2006], ["Azumanga Daioh", 1999],
+      ["Hinamatsuri", 2010], ["Mission: Yozakura Family", 2017], ["Witch Watch", 2021],
+      ["Mairimashita! Iruma-kun", 2017], ["Welcome to the NHK", 2004],
+      ["Detroit Metal City", 2005], ["Gin no Saji (Silver Spoon)", 2011],
+      ["Assassination Classroom", 2012], ["Barakamon", 2009],
+      ["Kindergarten WARS"], ["Thermae Romae", 2008],
+    ]),
+    ...ob("Deportes", [
+      ["Slam Dunk", 1990], ["Hajime no Ippo", 1989], ["Ahiru no Sora", 2004],
+      ["Kuroko no Basket", 2008], ["Captain Tsubasa", 1981], ["Eyeshield 21", 2002],
+      ["Giant Killing", 2007], ["Baby Steps", 2007], ["Prince of Tennis", 1999],
+      ["Hikaru no Go", 1998], ["Yowamushi Pedal", 2008], ["Diamond no Ace", 2006],
+      ["Major", 1994], ["Medalist", 2020],
+    ]),
+    ...ob("Histórico", [
+      ["Lone Wolf and Cub", 1970], ["Peacemaker Kurogane", 2003],
+    ]),
+  ],
+
+  manhwa: [
+    ...ob("Acción", [["Kubera"], ["Girls of the Wild's"], ["Duty After School"]]),
+    ...ob("Drama", [["Dr. Frost"], ["Annarasumanara"], ["Lore Olympus"], ["Spirit Fingers"]]),
+  ],
+
+  manhua: [
+    ...ob("Acción", [["Shrouding the Heavens"], ["Desolate Era"]]),
+    ...ob("Romance", [["Tian Guan Ci Fu (Heaven Official's Blessing)"], ["Mo Dao Zu Shi"]]),
+  ],
+
+  novela: [
+    ...ob("Fantasía", [
+      ["Spice and Wolf"], ["Monogatari Series"], ["The Legendary Moonlight Sculptor"],
+      ["Coiling Dragon"], ["I Shall Seal the Heavens"],
+    ]),
+  ],
+
+  josei: [
+    ...ob("Drama", [["Nodame Cantabile", 2001], ["Usagi Drop"], ["Tokyo Tarareba Musume"], ["Wotakoi"], ["Last Quarter"], ["Tamaki & Amane", 2025]]),
+  ],
+
+  shoujo: [
+    ...ob("Romance", [
+      ["Hana Yori Dango"], ["Orange"], ["Dengeki Daisy"], ["Kamisama Kiss"],
+      ["Wolf Girl and Black Prince"], ["Itazura na Kiss"],
+    ]),
+    ...ob("Fantasía", [
+      ["Sailor Moon"], ["Cardcaptor Sakura"], ["Revolutionary Girl Utena"],
+      ["Fushigi Yuugi"], ["Natsume Yuujinchou"],
+    ]),
+  ],
+};
+
 /* Mezcla sin repetir: compara el título normalizado dentro de cada categoría */
 (function mergeNuevas(){
   const norm = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
-  Object.entries(NUEVAS).forEach(([cat, list]) => {
+  Object.entries(NUEVAS).concat(Object.entries(NUEVAS2), Object.entries(NUEVAS3)).forEach(([cat, list]) => {
     if (!DATA[cat]) return;
     const seen = new Set(DATA[cat].items.map(i => norm(i.title)));
     list.forEach(it => {
