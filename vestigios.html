@@ -2178,10 +2178,120 @@ const NUEVAS3 = {
   ],
 };
 
+/* PARCHE-VESTIGIOS-4 · temporadas, películas y especiales que faltaban (anime). Todo entra como "Pendiente". */
+const NUEVAS4 = {
+  anime: [
+    ...eps("Acción", [
+      ["One Punch Man", 12, 2015],
+      ["One Punch Man Specials", 6, 2016, OVA],
+      ["One Punch Man 2nd Season", 12, 2019],
+      ["One Punch Man 2nd Season Specials", 6, 2019, OVA],
+      ["Hunter x Hunter (1999)", 62, 1999],
+      ["Hunter x Hunter OVA", 8, 2002, OVA],
+      ["Hunter x Hunter: Greed Island", 14, 2003, OVA],
+      ["Hunter x Hunter: G.I. Final", 14, 2004, OVA],
+      ["JoJo's Bizarre Adventure", 26, 2012],
+      ["JoJo's Bizarre Adventure: Stardust Crusaders", 24, 2014],
+      ["JoJo's Bizarre Adventure: Stardust Crusaders - Egypt", 24, 2015],
+      ["JoJo's Bizarre Adventure: Diamond Is Unbreakable", 39, 2016],
+      ["JoJo's Bizarre Adventure: Golden Wind", 39, 2018],
+      ["JoJo's Bizarre Adventure: Stone Ocean", 38, 2021],
+      ["Attack on Titan: Crimson Bow and Arrow", 1, 2014, MOVIE],
+      ["Attack on Titan: Wings of Freedom", 1, 2015, MOVIE],
+      ["Attack on Titan: Roar of Awakening", 1, 2018, MOVIE],
+      ["Attack on Titan: No Regrets", 2, 2014, OVA],
+      ["Attack on Titan: Lost Girls", 3, 2014, OVA],
+      ["Attack on Titan: Junior High", 12, 2015],
+      ["Bleach: Memories of Nobody", 1, 2006, MOVIE],
+      ["Bleach: The DiamondDust Rebellion", 1, 2007, MOVIE],
+      ["Bleach: Fade to Black", 1, 2008, MOVIE],
+      ["Bleach: Hell Verse", 1, 2010, MOVIE],
+      ["Burn the Witch", 1, 2020, MOVIE],
+      ["Bleach: Thousand-Year Blood War - The Calamity", null, 2026],
+      ["One Piece Film: Strong World", 1, 2009, MOVIE],
+      ["One Piece Film: Z", 1, 2012, MOVIE],
+      ["One Piece Film: Gold", 1, 2016, MOVIE],
+      ["One Piece: Stampede", 1, 2019, MOVIE],
+      ["One Piece Film: Red", 1, 2022, MOVIE],
+      ["Shuumatsu no Valkyrie II", null, 2023],
+      ["Enen no Shouboutai: San no Shou Part 2", null, 2025],
+      ["Mob Psycho 100: Reigen", 1, 2018, OVA],
+    ]),
+    ...eps("Fantasía", [
+      ["Fumetsu no Anata e 3rd Season", null, 2025],
+      ["Maou Gakuin no Futekigousha II Part 2", null, 2024],
+      ["Re:Zero kara Hajimeru Break Time", 12, 2016, OVA],
+      ["Re:Zero kara Hajimeru Break Time 2nd Season", 12, 2020, OVA],
+      ["Mushishi Zoku Shou", 10, 2014],
+      ["Mushishi Zoku Shou: Suzu no Shizuku", 10, 2015],
+      ["Mushishi Special: Hihamukage", 1, 2014, OVA],
+      ["Ousama Ranking: Yuuki no Takarabako", 15, 2023],
+    ]),
+    ...eps("Comedia", [
+      ["Kono Subarashii Sekai ni Shukufuku wo! Kono Subarashii Choker ni Shukufuku wo!", 1, 2016, OVA],
+      ["Kono Subarashii Sekai ni Shukufuku wo! 2: Kono Subarashii Geijutsu ni Shukufuku wo!", 1, 2017, OVA],
+      ["Spy x Family Season 2", 12, 2023],
+      ["Spy x Family Movie: Code: White", 1, 2023, MOVIE],
+      ["Spy x Family Season 3", 12, 2025],
+      ["Hamefura X", 12, 2023],
+      ["Kyokou Suiri Season 2", 12, 2023],
+      ["Gintama' (2011)", 51, 2011],
+      ["Gintama': Enchousen", 13, 2012],
+      ["Gintama° (2015)", 12, 2015],
+      ["Gintama. Porori-hen", null, 2017],
+      ["Gintama: Shirogane no Tamashii-hen", null, 2018],
+      ["Gintama: Shirogane no Tamashii-hen 2", null, 2018],
+      ["Gintama: Shinyaku Benizakura-hen", 1, 2010, MOVIE],
+      ["Gintama: Kanketsu-hen - Yorozuya yo Eien Nare", 1, 2013, MOVIE],
+      ["Gintama: The Final", 1, 2021, MOVIE],
+    ]),
+    ...eps("Romance", [
+      ["Kimi ni Todoke 2nd Season", 12, 2011],
+      ["Kimi ni Todoke 3rd Season", 12, 2024],
+    ]),
+    ...eps("Thriller", [
+      ["Death Note: Relight 1 - Visions of a God", 1, 2007, OVA],
+      ["Death Note: Relight 2 - L's Successors", 1, 2008, OVA],
+      ["Tokyo Ghoul: Jack", 1, 2015, OVA],
+      ["Tokyo Ghoul: Pinto", 1, 2014, OVA],
+      ["Psycho-Pass: Sinners of the System - Case.1 Crime and Punishment", 1, 2019, MOVIE],
+      ["Psycho-Pass: Sinners of the System - Case.2 First Guardian", 1, 2019, MOVIE],
+      ["Psycho-Pass: Sinners of the System - Case.3 Beyond Love and Hate", 1, 2019, MOVIE],
+      ["Psycho-Pass: First Inspector", 3, 2020, OVA],
+      ["Psycho-Pass: Providence", 1, 2023, MOVIE],
+      ["Odd Taxi: In the Woods", 1, 2022, MOVIE],
+      ["Gyakkyou Burai Kaiji: Hakairoku-hen", 26, 2011],
+      ["Code Geass: Lelouch of the Rebellion I - Initiation", 1, 2017, MOVIE],
+      ["Code Geass: Lelouch of the Rebellion II - Transgression", 1, 2018, MOVIE],
+      ["Code Geass: Lelouch of the Rebellion III - Glorification", 1, 2018, MOVIE],
+      ["Code Geass: Akito the Exiled", 5, 2012, OVA],
+    ]),
+    ...eps("Ciencia ficción", [
+      ["Neon Genesis Evangelion: Death & Rebirth", 1, 1997, MOVIE],
+      ["Neon Genesis Evangelion: The End of Evangelion", 1, 1997, MOVIE],
+      ["Evangelion: 1.0 You Are (Not) Alone", 1, 2007, MOVIE],
+      ["Evangelion: 2.0 You Can (Not) Advance", 1, 2009, MOVIE],
+      ["Evangelion: 3.0 You Can (Not) Redo", 1, 2012, MOVIE],
+      ["Evangelion: 3.0+1.0 Thrice Upon a Time", 1, 2021, MOVIE],
+    ]),
+    ...eps("Drama", [
+      ["Fruits Basket (2001)", 26, 2001],
+      ["Fruits Basket 2nd Season", 25, 2020],
+      ["Fruits Basket: The Final", 13, 2021],
+      ["Fruits Basket: Prelude", 1, 2022, MOVIE],
+      ["Honey and Clover II", 12, 2006],
+    ]),
+    ...eps("Deportes", [
+      ["Chihayafuru 2", 25, 2013],
+      ["Chihayafuru 3", 24, 2019],
+    ]),
+  ],
+};
+
 /* Mezcla sin repetir: compara el título normalizado dentro de cada categoría */
 (function mergeNuevas(){
   const norm = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
-  Object.entries(NUEVAS).concat(Object.entries(NUEVAS2), Object.entries(NUEVAS3)).forEach(([cat, list]) => {
+  Object.entries(NUEVAS).concat(Object.entries(NUEVAS2), Object.entries(NUEVAS3), Object.entries(NUEVAS4)).forEach(([cat, list]) => {
     if (!DATA[cat]) return;
     const seen = new Set(DATA[cat].items.map(i => norm(i.title)));
     list.forEach(it => {
@@ -2196,6 +2306,22 @@ const NUEVAS3 = {
 /* ==========================================================================
    Utilidades
    ========================================================================== */
+/* PARCHE-VESTIGIOS-4 · limpieza de repetidos: compara el título sin alias entre paréntesis (salvo años) y conserva el primero */
+(function dedupeAll(){
+  const key = (s) => s.replace(/\s*\((?!\d{4}\))[^)]*\)/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+  let removed = 0;
+  Object.values(DATA).forEach((c) => {
+    const seen = new Set();
+    c.items = c.items.filter((it) => {
+      const k = key(it.title);
+      if (seen.has(k)){ removed++; console.info(`[VESTIGIOS] Repetido omitido en ${c.label}: ${it.title}`); return false; }
+      seen.add(k);
+      return true;
+    });
+  });
+  if (removed) console.info(`[VESTIGIOS] ${removed} repetidos omitidos`);
+})();
+
 const railsEl   = document.getElementById("rails");
 const navEl     = document.getElementById("quickNav");
 const statsEl   = document.getElementById("statsBar");
