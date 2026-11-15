@@ -1114,6 +1114,9 @@ const ANIME_EXTRA = [
     ["Blue Lock: Episode Nagi", 1, 2024, MOVIE],
     ["Blue Lock 2nd Season", 14, 2024],
     ["Dorohedoro", 12, 2020],
+    // segundas temporadas que faltaban (misma categoría que su 1.ª temporada)
+    ["Seirei Gensouki 2", 12, 2024],
+    ["Mato Seihei no Slave 2", 12, 2026],
   ]),
   ...eps("Fantasía", [
     ["Frieren 2nd Season", 10, 2026],
@@ -1140,6 +1143,18 @@ const ANIME_EXTRA = [
     ["Mushoku Tensei: Isekai Ittara Honki Dasu Part 2", 12, 2021],
     ["Mushoku Tensei II: Isekai Ittara Honki Dasu", 12, 2023],
     ["Mushoku Tensei II: Isekai Ittara Honki Dasu Part 2", 12, 2024],
+    // Sword Art Online: temporadas, películas, especiales y spin-off
+    ["Sword Art Online", 25, 2012],
+    ["Sword Art Online: Extra Edition", 1, 2013, OVA],
+    ["Sword Art Online II", 24, 2014],
+    ["Sword Art Online: Ordinal Scale", 1, 2017, MOVIE],
+    ["Sword Art Online Alternative: Gun Gale Online", 12, 2018],
+    ["Sword Art Online: Alicization", 24, 2018],
+    ["Sword Art Online: Alicization - War of Underworld", 12, 2019],
+    ["Sword Art Online: Alicization - War of Underworld 2nd Season", 11, 2020],
+    ["Sword Art Online: Progressive - Aria of a Starless Night", 1, 2021, MOVIE],
+    ["Sword Art Online: Progressive - Scherzo of Deep Night", 1, 2022, MOVIE],
+    ["Sword Art Online Alternative: Gun Gale Online II", 12, 2024],
   ]),
   ...eps("Comedia", [
     ["Kono Subarashii Sekai ni Shukufuku wo!", 10, 2016],
@@ -1166,14 +1181,14 @@ const DATA = {
     label: "Animes",
     items: [
       // — muestra original —
-      { title: "Vinland Saga",        sub: "戦士",     year: 2019, rating: "9.4", status: "Al día",     img: poster("vinland-saga") },
-      { title: "Jujutsu Kaisen",      sub: "呪術廻戦",  year: 2020, rating: "8.9", status: "Al día",     img: poster("jujutsu-kaisen") },
-      { title: "Frieren",             sub: "葬送",     year: 2023, rating: "9.6", status: "Completado", img: poster("frieren") },
-      { title: "Cowboy Bebop",        sub: "カウボーイ", year: 1998, rating: "9.7", status: "Completado", img: poster("cowboy-bebop") },
-      { title: "Mob Psycho 100",      sub: "モブ",     year: 2016, rating: "9.1", status: "Completado", img: poster("mob-psycho") },
-      { title: "Made in Abyss",       sub: "深淵",     year: 2017, rating: "9.0", status: "Pausado",    img: poster("made-in-abyss") },
-      { title: "Ping Pong",           sub: "卓球",     year: 2014, rating: "9.3", status: "Completado", img: poster("ping-pong") },
-      { title: "Attack on Titan",     sub: "進撃",     year: 2013, rating: "9.2", status: "Completado", img: poster("attack-on-titan") },
+      { title: "Vinland Saga", genre: "Acción",        sub: "戦士",     year: 2019, rating: "9.4", status: "Al día",     img: poster("vinland-saga") },
+      { title: "Jujutsu Kaisen", genre: "Acción",      sub: "呪術廻戦",  year: 2020, rating: "8.9", status: "Al día",     img: poster("jujutsu-kaisen") },
+      { title: "Frieren", genre: "Fantasía",             sub: "葬送",     year: 2023, rating: "9.6", status: "Completado", img: poster("frieren") },
+      { title: "Cowboy Bebop", genre: "Acción",        sub: "カウボーイ", year: 1998, rating: "9.7", status: "Completado", img: poster("cowboy-bebop") },
+      { title: "Mob Psycho 100", genre: "Acción",      sub: "モブ",     year: 2016, rating: "9.1", status: "Completado", img: poster("mob-psycho") },
+      { title: "Made in Abyss", genre: "Fantasía",       sub: "深淵",     year: 2017, rating: "9.0", status: "Pausado",    img: poster("made-in-abyss") },
+      { title: "Ping Pong", genre: "Deportes",           sub: "卓球",     year: 2014, rating: "9.3", status: "Completado", img: poster("ping-pong") },
+      { title: "Attack on Titan", genre: "Acción",     sub: "進撃",     year: 2013, rating: "9.2", status: "Completado", img: poster("attack-on-titan") },
       // — desde tus listas de Discord —
       ...rows("Acción", [
         ["Genjitsu Shugi Yuusha no Oukoku Saikenki", 26, "done"],
@@ -1210,7 +1225,6 @@ const DATA = {
         ["Kyokou Suiri", 1],
         ["Megami no café", 24, "done"],
         ["Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san", 12, "done"],
-        ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e", 12, "done"],
         ["Kuroiwa Medaka ni Watashi no Kawaii ga Tsuujinai", 2],
         ["Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen", 12, "done"],
         ["Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen 2nd Season", 13, "done"],
@@ -1225,6 +1239,7 @@ const DATA = {
         ["Isekai Maou to Shoukan Shoujo no Dorei Majutsu Ω", 10, "done"],
       ]),
       ...rows("Drama", [
+        ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e", 12, "done"],   // 1.ª temporada: antes en Comedia
         ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 2nd Season", 13, "done"],
         ["Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e 3rd Season", 13, "done"],
         ["Kaoru Hana wa Rin to Saku", 1],
@@ -1252,14 +1267,14 @@ const DATA = {
     label: "Mangas",
     items: [
       // — muestra original —
-      { title: "Vagabond",            sub: "武蔵",     year: 1998, rating: "9.8", status: "Pausado",    img: poster("vagabond") },
-      { title: "Berserk",              sub: "剣の戦士",  year: 1989, rating: "9.9", status: "Al día",     img: poster("berserk") },
-      { title: "Blame!",               sub: "ブラム",   year: 1997, rating: "8.6", status: "Completado", img: poster("blame") },
-      { title: "Oyasumi Punpun",       sub: "ぷんぷん",  year: 2007, rating: "9.3", status: "Completado", img: poster("punpun") },
-      { title: "20th Century Boys",    sub: "少年",     year: 1999, rating: "9.1", status: "Completado", img: poster("20th-century-boys") },
-      { title: "Homunculus",           sub: "ホムンクルス", year: 2003, rating: "8.4", status: "Completado", img: poster("homunculus") },
-      { title: "Dorohedoro",           sub: "どろへどろ", year: 2000, rating: "8.8", status: "Completado", img: poster("dorohedoro") },
-      { title: "Gantz",                sub: "ガンツ",   year: 2000, rating: "8.2", status: "Abandonado", img: poster("gantz") },
+      { title: "Vagabond", genre: "Acción",            sub: "武蔵",     year: 1998, rating: "9.8", status: "Pausado",    img: poster("vagabond") },
+      { title: "Berserk", genre: "Fantasía",              sub: "剣の戦士",  year: 1989, rating: "9.9", status: "Al día",     img: poster("berserk") },
+      { title: "Blame!", genre: "Ciencia ficción",               sub: "ブラム",   year: 1997, rating: "8.6", status: "Completado", img: poster("blame") },
+      { title: "Oyasumi Punpun", genre: "Drama",       sub: "ぷんぷん",  year: 2007, rating: "9.3", status: "Completado", img: poster("punpun") },
+      { title: "20th Century Boys", genre: "Thriller",    sub: "少年",     year: 1999, rating: "9.1", status: "Completado", img: poster("20th-century-boys") },
+      { title: "Homunculus", genre: "Thriller",           sub: "ホムンクルス", year: 2003, rating: "8.4", status: "Completado", img: poster("homunculus") },
+      { title: "Dorohedoro", genre: "Acción",           sub: "どろへどろ", year: 2000, rating: "8.8", status: "Completado", img: poster("dorohedoro") },
+      { title: "Gantz", genre: "Ciencia ficción",                sub: "ガンツ",   year: 2000, rating: "8.2", status: "Abandonado", img: poster("gantz") },
       // — desde tus listas de Discord —
       ...rows("Acción", [
         ["Bleach", 1],
@@ -1337,13 +1352,13 @@ const DATA = {
     label: "Manhwas",
     items: [
       // — muestra original —
-      { title: "Solo Leveling",              sub: "나 혼자만", year: 2018, rating: "9.0", status: "Completado", img: poster("solo-leveling") },
-      { title: "Omniscient Reader",          sub: "전지적",   year: 2020, rating: "9.5", status: "Al día",     img: poster("omniscient-reader") },
-      { title: "Tower of God",               sub: "신의 탑",   year: 2010, rating: "8.7", status: "Al día",     img: poster("tower-of-god") },
-      { title: "Bastard",                    sub: "바스타드", year: 2014, rating: "8.9", status: "Completado", img: poster("bastard") },
-      { title: "Sweet Home",                 sub: "스위트홈", year: 2017, rating: "8.5", status: "Completado", img: poster("sweet-home") },
-      { title: "Wind Breaker",               sub: "윈드브레이커", year: 2020, rating: "8.6", status: "Al día", img: poster("wind-breaker") },
-      { title: "Viral Hit",                  sub: "인생역전", year: 2019, rating: "8.3", status: "Al día",     img: poster("viral-hit") },
+      { title: "Solo Leveling", genre: "Acción",              sub: "나 혼자만", year: 2018, rating: "9.0", status: "Completado", img: poster("solo-leveling") },
+      { title: "Omniscient Reader", genre: "Fantasía",          sub: "전지적",   year: 2020, rating: "9.5", status: "Al día",     img: poster("omniscient-reader") },
+      { title: "Tower of God", genre: "Fantasía",               sub: "신의 탑",   year: 2010, rating: "8.7", status: "Al día",     img: poster("tower-of-god") },
+      { title: "Bastard", genre: "Thriller",                    sub: "바스타드", year: 2014, rating: "8.9", status: "Completado", img: poster("bastard") },
+      { title: "Sweet Home", genre: "Terror",                 sub: "스위트홈", year: 2017, rating: "8.5", status: "Completado", img: poster("sweet-home") },
+      { title: "Wind Breaker", genre: "Deportes",               sub: "윈드브레이커", year: 2020, rating: "8.6", status: "Al día", img: poster("wind-breaker") },
+      { title: "Viral Hit", genre: "Acción",                  sub: "인생역전", year: 2019, rating: "8.3", status: "Al día",     img: poster("viral-hit") },
       // — desde tus listas de Discord —
       ...rows("Acción", [
         ["Villano a matar", 200],
@@ -1615,14 +1630,14 @@ const DATA = {
     label: "Novelas",
     items: [
       // — muestra original —
-      { title: "Mushoku Tensei",       sub: "無職転生",  year: 2014, rating: "9.2", status: "Completado", img: poster("mushoku-tensei") },
-      { title: "Overlord",             sub: "オーバーロード", year: 2012, rating: "8.8", status: "Al día", img: poster("overlord") },
-      { title: "Re:Zero",              sub: "リゼロ",   year: 2012, rating: "9.0", status: "Al día",     img: poster("rezero") },
-      { title: "The Wandering Inn",    sub: "web novel", year: 2016, rating: "9.4", status: "Al día",     img: poster("wandering-inn") },
-      { title: "Konosuba",             sub: "この素晴らしい", year: 2012, rating: "8.7", status: "Completado", img: poster("konosuba") },
-      { title: "Tensura",              sub: "転スラ",   year: 2013, rating: "8.5", status: "Completado", img: poster("tensura") },
-      { title: "Classroom of the Elite", sub: "ようこそ実力", year: 2015, rating: "8.9", status: "Al día", img: poster("classroom-elite") },
-      { title: "Grimgar",              sub: "灰と幻想",  year: 2013, rating: "8.1", status: "Completado", img: poster("grimgar") },
+      { title: "Mushoku Tensei", genre: "Fantasía",       sub: "無職転生",  year: 2014, rating: "9.2", status: "Completado", img: poster("mushoku-tensei") },
+      { title: "Overlord", genre: "Fantasía",             sub: "オーバーロード", year: 2012, rating: "8.8", status: "Al día", img: poster("overlord") },
+      { title: "Re:Zero", genre: "Fantasía",              sub: "リゼロ",   year: 2012, rating: "9.0", status: "Al día",     img: poster("rezero") },
+      { title: "The Wandering Inn", genre: "Fantasía",    sub: "web novel", year: 2016, rating: "9.4", status: "Al día",     img: poster("wandering-inn") },
+      { title: "Konosuba", genre: "Comedia",             sub: "この素晴らしい", year: 2012, rating: "8.7", status: "Completado", img: poster("konosuba") },
+      { title: "Tensura", genre: "Fantasía",              sub: "転スラ",   year: 2013, rating: "8.5", status: "Completado", img: poster("tensura") },
+      { title: "Classroom of the Elite", genre: "Drama", sub: "ようこそ実力", year: 2015, rating: "8.9", status: "Al día", img: poster("classroom-elite") },
+      { title: "Grimgar", genre: "Fantasía",              sub: "灰と幻想",  year: 2013, rating: "8.1", status: "Completado", img: poster("grimgar") },
       // — desde tus listas de Discord —
       ...rows("Acción", [
         ["Reverend Insanity", 200],
@@ -2711,10 +2726,19 @@ const SORTS = {
   updated: "Último cambio",
 };
 
+/* Orden A–Z: primero los títulos que empiezan por una letra; los que empiezan por número o símbolo
+   (p. ej. "3-gatsu no Lion") van al final, ordenados entre ellos. numeric: "2" va antes que "10". */
+const startsWithLetter = (s) => /^\p{L}/u.test(fold(s).replace(/^[^\p{L}\p{N}]+/u, ""));
+function azCompare(ta, tb){
+  const la = startsWithLetter(ta), lb = startsWithLetter(tb);
+  if (la !== lb) return la ? -1 : 1;
+  return ta.localeCompare(tb, "es", { sensitivity: "base", ignorePunctuation: true, numeric: true });
+}
+
 function sortCmp(){
   const v = (c) => view(c._item);
   switch (F.sort){
-    case "az":      return (a, b) => a._item.title.localeCompare(b._item.title, "es", { sensitivity: "base", ignorePunctuation: true });
+    case "az":      return (a, b) => azCompare(a._item.title, b._item.title);
     case "rating":  return (a, b) => (ratingOf(v(b)) ?? -1) - (ratingOf(v(a)) ?? -1);
     case "cap":     return (a, b) => capOf(v(b)) - capOf(v(a));
     case "updated": return (a, b) => (v(b).updated || 0) - (v(a).updated || 0);
@@ -2743,7 +2767,8 @@ function applyFilters(keepScroll){
       if (ok) n++;
     });
 
-    const list = cmp ? rail.cards.slice().sort((a, b) => cmp(a, b) || a._item.id.localeCompare(b._item.id)) : rail.cards;
+    // desempate: A–Z (letras primero) y, por último, el id → el orden nunca depende del azar
+    const list = cmp ? rail.cards.slice().sort((a, b) => cmp(a, b) || azCompare(a._item.title, b._item.title) || a._item.id.localeCompare(b._item.id)) : rail.cards;
     list.forEach((c, i) => { c._order = i; c.style.order = i; });
 
     rail.section.hidden = n === 0;
