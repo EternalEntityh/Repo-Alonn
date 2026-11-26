@@ -2302,10 +2302,40 @@ const NUEVAS4 = {
   ],
 };
 
+/* PARCHE-VESTIGIOS-5 · Moriarty the Patriot, Terror in Resonance y Talentless Nana (anime, manga y novelas). Todo entra como "Pendiente". */
+const NUEVAS5 = {
+  anime: [
+    ...eps("Misterio", [
+      ["Moriarty the Patriot", 11, 2020],
+      ["Moriarty the Patriot Part 2", 13, 2021],
+      ["Moriarty the Patriot OVA", 2, 2022, OVA],
+    ]),
+    ...eps("Thriller", [
+      ["Terror in Resonance", 11, 2014],
+      ["Talentless Nana", 13, 2020],
+      ["Talentless Nana Mini Anime", null, 2020, OVA],
+    ]),
+  ],
+  manga: [
+    ...ob("Misterio", [
+      ["Moriarty the Patriot", 2016],
+      ["Moriarty the Patriot: The Remains", 2023],
+    ]),
+    ...ob("Thriller", [
+      ["Talentless Nana", 2016],
+    ]),
+  ],
+  novela: [
+    ...ob("Misterio", [
+      ["Moriarty the Patriot (novelas)", 2018],
+    ]),
+  ],
+};
+
 /* Mezcla sin repetir: compara el título normalizado dentro de cada categoría */
 (function mergeNuevas(){
   const norm = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
-  Object.entries(NUEVAS).concat(Object.entries(NUEVAS2), Object.entries(NUEVAS3), Object.entries(NUEVAS4)).forEach(([cat, list]) => {
+  Object.entries(NUEVAS).concat(Object.entries(NUEVAS2), Object.entries(NUEVAS3), Object.entries(NUEVAS4), Object.entries(NUEVAS5)).forEach(([cat, list]) => {
     if (!DATA[cat]) return;
     const seen = new Set(DATA[cat].items.map(i => norm(i.title)));
     list.forEach(it => {
